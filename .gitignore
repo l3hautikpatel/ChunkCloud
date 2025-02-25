@@ -1,0 +1,37 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Django specific files (SQLite, local settings, logs)
+*.sqlite3
+*.log
+local_settings.py
+
+# Compiled static files (if generated)
+staticfiles/
+
+# Media (user-uploaded content)
+media/
+
+# Environment variables file (never commit sensitive info)
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker overrides or build folders
+docker-compose.override.yml
+*.egg-info/
+dist/
+build/
+
+
+datafake
