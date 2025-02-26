@@ -7,3 +7,10 @@ body{
     color: white;
     background-color: black;
 }
+
+a{
+    color: rgb(238, 18, 18);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0px 10px;
+}
