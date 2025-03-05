@@ -9,6 +9,9 @@ Example: forms for file upload, chunk reassembly, or metadata submission.
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .models import FileMetadata
+
+
 
 class CustomUserCreationForm(UserCreationForm):
     full_name = forms.CharField(
@@ -45,3 +48,10 @@ class CustomAuthenticationForm(AuthenticationForm):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'})
     )
+
+class FileUploadForm(forms.ModelForm):
+    class Meta:
+        model = FileMetadata
+        fields = ['file_name', 'description']
+    
+    file = forms.FileField(required=True)  # File field that gets stored in MinIO

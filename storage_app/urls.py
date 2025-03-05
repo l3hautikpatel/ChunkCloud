@@ -14,6 +14,16 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('files/', views.files_view, name='files'),
+    path('download/<str:file_id>/', views.download_file_view, name='download_file'),
+
+
+
+
+
+
+
+
     # Django's built-in password reset views with custom templates.
     path('password_reset/', auth_views.PasswordResetView.as_view(
             template_name='password_reset.html',

@@ -8,14 +8,18 @@
         <p><strong>Username:</strong> {{ user.username }}</p>
         <p><strong>Full Name:</strong> {{ user.first_name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
-    <!-- 
-    If you have extended your User model or have a UserProfile model that stores extra fields 
-    like date of birth and gender, you can display them here. 
-    For example, if you have a userprofile related to the user:
-    -->
+        <p><strong>Registered on:</strong> {{ user.date_joined|date:"F j, Y, g:i a" }}</p>
+        <p><strong>Last Login:</strong> 
+            {% if user.last_login %}
+                {{ user.last_login|date:"F j, Y, g:i a" }}
+            {% else %}
+                First login
+            {% endif %}
+        </p>
+        <!-- If you have a related UserProfile for extra fields -->
         {% if user.userprofile %}
-        <p><strong>Date of Birth:</strong> {{ user.userprofile.date_of_birth }}</p>
-        <p><strong>Gender:</strong> {{ user.userprofile.gender }}</p>
+            <p><strong>Date of Birth:</strong> {{ user.userprofile.date_of_birth }}</p>
+            <p><strong>Gender:</strong> {{ user.userprofile.gender }}</p>
         {% endif %}
     </div>
     <!-- Add additional sections as needed -->

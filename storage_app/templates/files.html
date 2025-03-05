@@ -1,0 +1,124 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+<div class="files-container">
+    <h2>My Files</h2>
+
+    <!-- Drag & Drop Overlay -->
+    <div id="drop-overlay" class="hidden">
+        <p>Drop your file here</p>
+    </div>
+
+    <!-- Upload Section -->
+    <button id="upload-btn">Upload File</button>
+
+    <!-- Hidden Upload Form -->
+    <div id="upload-form-container" style="display: none;">
+        <h3>Upload File</h3>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% comment %} <input type="file" id="file-input" name="file"> {% endcomment %}
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    <!-- Display User Files -->
+    {% if files %}
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Size</th>
+                    <th>Uploaded On</th>
+                    <th>Last Downloaded</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>{{ file.file_name }}</td>
+                    <td>{{ file.file_size }} bytes</td>
+                    <td>{{ file.uploaded_at|date:"F j, Y, g:i a" }}</td>
+                    <td>
+                        {% if file.last_downloaded_at %}
+                            {{ file.last_downloaded_at|date:"F j, Y, g:i a" }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'download_file' file_id=file.file_id %}" class="btn" download>Download</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No files to show.</p>
+    {% endif %}
+</div>
+
+<style>
+    #drop-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        display: none;
+        z-index: 999;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let dropOverlay = document.getElementById('drop-overlay');
+        let uploadFormContainer = document.getElementById('upload-form-container');
+        let fileInput = document.querySelector('input[type="file"]'); // Use Django's file input
+    
+        // Show upload form when clicking "Upload File"
+        document.getElementById('upload-btn').addEventListener('click', function() {
+            uploadFormContainer.style.display = 'block';
+        });
+    
+        // Drag & Drop anywhere
+        document.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropOverlay.style.display = 'flex';
+        });
+    
+        document.addEventListener('dragleave', function (e) {
+            if (e.relatedTarget === null || e.relatedTarget.nodeName === "HTML") {
+                dropOverlay.style.display = 'none';
+            }
+        });
+    
+        document.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropOverlay.style.display = 'none';
+    
+            let files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files; // Assign to Django's input
+                uploadFormContainer.style.display = 'block'; // Show the form
+            }
+        });
+    });
+    
+</script>
+
+{% endblock %}

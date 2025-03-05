@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os 
 from pathlib import Path
+import environ  
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -124,10 +128,30 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'storage_app/static')
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# 
+
+
+
+
+
+# minio setup for the project Version 0.1  settings.py
+
+env = environ.Env()
+
+
+DEBUG = env.bool("DEBUG", default=True)
+# SECRET_KEY = env("SECRET_KEY", default="django-insecure-defaultkey")
+
+# MinIO settings
+MINIO_ENDPOINT = env("MINIO_ENDPOINT", default="http://localhost:9000")
+MINIO_ACCESS_KEY = env("MINIO_ACCESS_KEY", default="admin")
+MINIO_SECRET_KEY = env("MINIO_SECRET_KEY", default="adminadmin")
+MINIO_BUCKET_NAME = env("MINIO_BUCKET_NAME", default="testbucket")
+MINIO_URL = env("MINIO_URL", default="http://localhost:9000")
