@@ -34,4 +34,8 @@ dist/
 build/
 
 
-datafake
+datafake/
+data/
+data2/
+data3
+data4/

@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  minio-node1:
+    image: minio/minio:latest
+    container_name: minio-node1
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=adminadmin
+    volumes:
+      - ./data/node1:/data
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # MinIO Console
+    command: server http://minio-node{1...4}/data --console-address ":9001"
+    networks:
+      - minio_cluster
+
+  minio-node2:
+    image: minio/minio:latest
+    container_name: minio-node2
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=adminadmin
+    volumes:
+      - ./data/node2:/data
+    ports:
+      - "9002:9000" # S3 API
+      - "9003:9001" # Console
+    command: server http://minio-node{1...4}/data --console-address ":9001"
+    networks:
+      - minio_cluster
+
+  minio-node3:
+    image: minio/minio:latest
+    container_name: minio-node3
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=adminadmin
+    volumes:
+      - ./data/node3:/data
+    ports:
+      - "9004:9000"
+      - "9005:9001"
+    command: server http://minio-node{1...4}/data --console-address ":9001"
+    networks:
+      - minio_cluster
+
+  minio-node4:
+    image: minio/minio:latest
+    container_name: minio-node4
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=adminadmin
+    volumes:
+      - ./data/node4:/data
+    ports:
+      - "9006:9000"
+      - "9007:9001"
+    command: server http://minio-node{1...4}/data --console-address ":9001"
+    networks:
+      - minio_cluster
+
+networks:
+  minio_cluster:
+    driver: bridge
