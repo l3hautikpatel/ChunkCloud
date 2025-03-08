@@ -143,15 +143,33 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # minio setup for the project Version 0.1  settings.py
 
-env = environ.Env()
+# env = environ.Env()
 
 
-DEBUG = env.bool("DEBUG", default=True)
+# DEBUG = env.bool("DEBUG", default=True)
 # SECRET_KEY = env("SECRET_KEY", default="django-insecure-defaultkey")
 
-# MinIO settings
+# # MinIO settings
+# MINIO_ENDPOINT = env("MINIO_ENDPOINT", default="http://localhost:9000")
+# MINIO_ACCESS_KEY = env("MINIO_ACCESS_KEY", default="admin")
+# MINIO_SECRET_KEY = env("MINIO_SECRET_KEY", default="adminadmin")
+# MINIO_BUCKET_NAME = env("MINIO_BUCKET_NAME", default="testbucket")
+# MINIO_URL = env("MINIO_URL", default="http://localhost:9000")
+
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
 MINIO_ENDPOINT = env("MINIO_ENDPOINT", default="http://localhost:9000")
+MINIO_ENDPOINTS = [ep.strip() for ep in env("MINIO_ENDPOINTS", default="localhost:9000,localhost:9002,localhost:9004,localhost:9006,localhost:9008").split(",")]
 MINIO_ACCESS_KEY = env("MINIO_ACCESS_KEY", default="admin")
 MINIO_SECRET_KEY = env("MINIO_SECRET_KEY", default="adminadmin")
 MINIO_BUCKET_NAME = env("MINIO_BUCKET_NAME", default="testbucket")
 MINIO_URL = env("MINIO_URL", default="http://localhost:9000")
+MINIO_USE_HTTPS = env.bool("MINIO_USE_HTTPS", default=False)
+
+
+

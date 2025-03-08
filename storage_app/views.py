@@ -85,6 +85,7 @@ def files_view(request):
     Displays the user's uploaded files and handles file uploads.
     """
     user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
+    
 
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)

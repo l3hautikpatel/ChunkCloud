@@ -1,63 +1,78 @@
 version: '3.8'
 
 services:
-  minio-node1:
+  minio1:
     image: minio/minio:latest
-    container_name: minio-node1
+    container_name: minio1
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=adminadmin
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminadmin
     volumes:
-      - ./data/node1:/data
+      - ./data1:/data
     ports:
-      - "9000:9000" # S3 API
-      - "9001:9001" # MinIO Console
-    command: server http://minio-node{1...4}/data --console-address ":9001"
+      - "9000:9000"
+      - "9001:9001"
+    command: server --address :9000 --console-address :9001 http://minio{1...5}/data
     networks:
       - minio_cluster
 
-  minio-node2:
+  minio2:
     image: minio/minio:latest
-    container_name: minio-node2
+    container_name: minio2
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=adminadmin
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminadmin
     volumes:
-      - ./data/node2:/data
+      - ./data2:/data
     ports:
-      - "9002:9000" # S3 API
-      - "9003:9001" # Console
-    command: server http://minio-node{1...4}/data --console-address ":9001"
+      - "9002:9000"
+      - "9003:9001"
+    command: server --address :9000 --console-address :9001 http://minio{1...5}/data
     networks:
       - minio_cluster
 
-  minio-node3:
+  minio3:
     image: minio/minio:latest
-    container_name: minio-node3
+    container_name: minio3
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=adminadmin
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminadmin
     volumes:
-      - ./data/node3:/data
+      - ./data3:/data
     ports:
       - "9004:9000"
       - "9005:9001"
-    command: server http://minio-node{1...4}/data --console-address ":9001"
+    command: server --address :9000 --console-address :9001 http://minio{1...5}/data
     networks:
       - minio_cluster
 
-  minio-node4:
+  minio4:
     image: minio/minio:latest
-    container_name: minio-node4
+    container_name: minio4
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=adminadmin
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminadmin
     volumes:
-      - ./data/node4:/data
+      - ./data4:/data
     ports:
       - "9006:9000"
       - "9007:9001"
-    command: server http://minio-node{1...4}/data --console-address ":9001"
+    command: server --address :9000 --console-address :9001 http://minio{1...5}/data
+    networks:
+      - minio_cluster
+
+  minio5:
+    image: minio/minio:latest
+    container_name: minio5
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminadmin
+    volumes:
+      - ./data5:/data
+    ports:
+      - "9008:9000"
+      - "9009:9001"
+    command: server --address :9000 --console-address :9001 http://minio{1...5}/data
     networks:
       - minio_cluster
 
