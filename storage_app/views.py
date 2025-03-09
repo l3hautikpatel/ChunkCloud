@@ -7,7 +7,7 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm, FileUploadF
 from .models import FileMetadata
 import uuid, os
 from django.utils.timezone import now
-from .utils.filesupdown import upload_file , download_file
+# from .utils.filesupdown import upload_file , download_file
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 # from .utils.minio_client import upload_file_to_minio 
@@ -79,52 +79,17 @@ def generate_file_id():
 
 
 
+
+
+
 @login_required(login_url='login')
 def files_view(request):
     """
     Displays the user's uploaded files and handles file uploads.
     """
     user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
+
     
-
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            try:
-                # Get the uploaded file and its details
-                uploaded_file = request.FILES['file']
-                file_size = uploaded_file.size
-                original_filename = uploaded_file.name
-                file_extension = os.path.splitext(original_filename)[1]
-                
-                # Generate unique file ID
-                file_id = generate_file_id()
-                
-                # Upload to MinIO
-                file_url = upload_file(uploaded_file, file_id)
-                
-                # Create metadata instance but don't save yet
-                metadata = form.save(commit=False)
-                metadata.user = request.user
-                metadata.file_id = file_id
-                metadata.file_size = file_size
-                metadata.file_url = file_url
-                # Add extension to the user-provided filename
-                # metadata.file_name = f"{original_filename}{file_extension}"
-                metadata.file_name = f"{original_filename}"
-                # Now save to database
-                metadata.save()
-                
-                messages.success(request, "File uploaded successfully!")
-                return redirect('files')
-                
-            except Exception as e:
-                messages.error(request, f"Error uploading file: {str(e)}")
-        else:
-            messages.error(request, "Form validation failed")
-    else:
-        form = FileUploadForm()
-
     return render(request, "files.html", {
         "files": user_files, 
         "form": form
@@ -133,27 +98,96 @@ def files_view(request):
 
 
 
-@login_required
-def download_file_view(request, file_id):
-    # Get the file metadata
-    file_metadata = get_object_or_404(FileMetadata, file_id=file_id, user=request.user)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @login_required(login_url='login')
+# def files_view(request):
+#     """
+#     Displays the user's uploaded files and handles file uploads.
+#     """
+#     user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
     
-    try:
-        # Get the file from MinIO
-        file_data = download_file(file_id)
+
+#     if request.method == 'POST':
+#         form = FileUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             try:
+#                 # Get the uploaded file and its details
+#                 uploaded_file = request.FILES['file']
+#                 file_size = uploaded_file.size
+#                 original_filename = uploaded_file.name
+#                 file_extension = os.path.splitext(original_filename)[1]
+                
+#                 # Generate unique file ID
+#                 file_id = generate_file_id()
+                
+#                 # Upload to MinIO
+#                 file_url = upload_file(uploaded_file, file_id)
+                
+#                 # Create metadata instance but don't save yet
+#                 metadata = form.save(commit=False)
+#                 metadata.user = request.user
+#                 metadata.file_id = file_id
+#                 metadata.file_size = file_size
+#                 metadata.file_url = file_url
+#                 # Add extension to the user-provided filename
+#                 # metadata.file_name = f"{original_filename}{file_extension}"
+#                 metadata.file_name = f"{original_filename}"
+#                 # Now save to database
+#                 metadata.save()
+                
+#                 messages.success(request, "File uploaded successfully!")
+#                 return redirect('files')
+                
+#             except Exception as e:
+#                 messages.error(request, f"Error uploading file: {str(e)}")
+#         else:
+#             messages.error(request, "Form validation failed")
+#     else:
+#         form = FileUploadForm()
+
+#     return render(request, "files.html", {
+#         "files": user_files, 
+#         "form": form
+#     })
+
+
+
+
+# @login_required
+# def download_file_view(request, file_id):
+#     # Get the file metadata
+#     file_metadata = get_object_or_404(FileMetadata, file_id=file_id, user=request.user)
+    
+#     try:
+#         # Get the file from MinIO
+#         file_data = download_file(file_id)
         
-        # Create the response
-        response = HttpResponse(file_data.read())
+#         # Create the response
+#         response = HttpResponse(file_data.read())
         
-        # Set the content disposition and filename
-        response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
+#         # Set the content disposition and filename
+#         response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
         
-        # Update last downloaded timestamp
-        file_metadata.last_downloaded_at = now()
-        file_metadata.save()
+#         # Update last downloaded timestamp
+#         file_metadata.last_downloaded_at = now()
+#         file_metadata.save()
         
-        return response
+#         return response
         
-    except Exception as e:
-        messages.error(request, f"Error downloading file: {str(e)}")
-        return redirect('files')
+#     except Exception as e:
+#         messages.error(request, f"Error downloading file: {str(e)}")
+#         return redirect('files')
