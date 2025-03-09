@@ -10,6 +10,7 @@ from django.utils.timezone import now
 # from .utils.filesupdown import upload_file , download_file
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from .utils.chuncker import chunk_file
 # from .utils.minio_client import upload_file_to_minio 
 
 
@@ -89,6 +90,25 @@ def files_view(request):
     """
     user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
 
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            
+            # Chunk file and create metadata
+            file_metadata = chunk_file(
+                file, 
+                request.user, 
+                description=form.cleaned_data.get('description')
+            )
+            
+            if file_metadata:
+                messages.success(request, "File uploaded successfully")
+                return redirect('files')
+            else:
+                messages.error(request, "File upload failed")
+    else:
+        form = FileUploadForm()
     
     return render(request, "files.html", {
         "files": user_files, 
@@ -99,8 +119,15 @@ def files_view(request):
 
 
 
+@login_required
+def download_file_view(request, file_id):
+    # Get the file metadata
+    file_metadata = get_object_or_404(FileMetadata, file_id=file_id)
 
-
+    # Download the file from MinIO    print the name of the file
+    response = HttpResponse(file_metadata.file, content_type=file_metadata.file_type)
+    response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
+    return response
 
 
 

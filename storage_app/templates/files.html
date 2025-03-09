@@ -50,7 +50,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'download_file' file_id=file.file_id %}" class="btn" download>Download</a>
+                        {% comment %} <a href="{% url 'download_file' file_id=file.file_id %}" class="btn" download>Download</a> {% endcomment %}
                     </td>
                 </tr>
                 {% endfor %}
