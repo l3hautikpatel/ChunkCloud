@@ -11,6 +11,12 @@ from django.utils.timezone import now
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from .utils.chuncker import chunk_file
+from django.http import FileResponse, Http404
+from django.contrib.auth.decorators import login_required
+from .models import FileMetadata
+from django.utils import timezone
+from storage_app.utils.chuncker import merge_chunks
+
 # from .utils.minio_client import upload_file_to_minio 
 
 
@@ -119,15 +125,71 @@ def files_view(request):
 
 
 
+
+
+
+
+
 @login_required
 def download_file_view(request, file_id):
-    # Get the file metadata
-    file_metadata = get_object_or_404(FileMetadata, file_id=file_id)
+    """
+    Download a file by its file_id
+    """
+    try:
+        # Retrieve the file metadata
+        file_metadata = FileMetadata.objects.get(
+            file_id=file_id, 
+            user=request.user
+        )
+        
+        # Merge chunks
+        merged_file_path = merge_chunks(file_metadata)
+        
+        if not merged_file_path:
+            raise Http404("File could not be reconstructed")
+        
+        # Prepare file response
+        response = FileResponse(
+            open(merged_file_path, 'rb'), 
+            as_attachment=True, 
+            filename=file_metadata.file_name
+        )
+        
+        # Optional: Update last downloaded timestamp
+        file_metadata.last_downloaded_at = timezone.now()
+        file_metadata.save()
+        
+        return response
+    
+    except FileMetadata.DoesNotExist:
+        raise Http404("File not found")
+    except Exception as e:
+        # logger.error(f"Download failed: {e}")
+        print(f"Download failed: {e}")
+        raise Http404("Download failed")
 
-    # Download the file from MinIO    print the name of the file
-    response = HttpResponse(file_metadata.file, content_type=file_metadata.file_type)
-    response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
-    return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @login_required
+# def download_file_view(request, file_id):
+#     # Get the file metadata
+#     file_metadata = get_object_or_404(FileMetadata, file_id=file_id)
+
+#     # Download the file from MinIO    print the name of the file
+#     response = HttpResponse(file_metadata.file, content_type=file_metadata.file_type)
+#     response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
+#     return response
 
 
 

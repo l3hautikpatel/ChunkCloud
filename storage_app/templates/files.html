@@ -40,7 +40,17 @@
                 {% for file in files %}
                 <tr>
                     <td>{{ file.file_name }}</td>
-                    <td>{{ file.file_size }} bytes</td>
+                    <td>{% if file.file_size < 1024 %}
+                        {{ file.file_size }} bytes
+                    {% elif file.file_size < 1048576 %}
+                        {% widthratio file.file_size 1024 1 %} KB
+                    {% elif file.file_size < 1073741824 %}
+                        {% widthratio file.file_size 1048576 1 %} MB
+                    {% elif file.file_size < 1099511627776 %}
+                        {% widthratio file.file_size 1073741824 1 %} GB
+                    {% else %}
+                        {% widthratio file.file_size 1099511627776 1 %} TB
+                    {% endif %}</td>
                     <td>{{ file.uploaded_at|date:"F j, Y, g:i a" }}</td>
                     <td>
                         {% if file.last_downloaded_at %}
@@ -50,7 +60,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% comment %} <a href="{% url 'download_file' file_id=file.file_id %}" class="btn" download>Download</a> {% endcomment %}
+                        <a href="{% url 'download_file' file_id=file.file_id %}" class="btn" download>Download</a>
                     </td>
                 </tr>
                 {% endfor %}
