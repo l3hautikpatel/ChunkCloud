@@ -5,13 +5,6 @@
 <div class="files-container">
     <h2>My Files</h2>
 
-
-    <!-- Download Progress Tracking -->
-    <div id="download-status-container" class="mt-3">
-        <!-- Download statuses will be dynamically added here -->
-    </div>
-
-
     <!-- Upload Progress Modal -->
     <div id="upload-progress-modal" class="modal" style="display:none;">
         <div class="modal-content">
@@ -69,12 +62,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{% url 'download_file' file_id=file.file_id %}" class="btn btn-primary download-btn" 
-                    data-file-id="{{ file.file_id }}"
-                    data-file-name="{{ file.file_name }}" download>Download</a>
-                </td>
-                <td>
-                    <div id="download-status-{{ file.file_id }}" class="download-status"></div>
+                    <a href="{% url 'download_file' file_id=file.file_id %}" class="btn" download>Download</a>
                 </td>
             </tr>
             {% endfor %}
@@ -127,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Redirect or refresh after a short delay
                 setTimeout(() => {
                     window.location.reload();
-                }, 2000);
+                }, 1500);
             } else {
                 // Error
                 uploadStatusMessage.textContent = 'Upload Failed. Please try again.';
@@ -145,86 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.open('POST', uploadForm.action, true);
         xhr.send(formData);
     });
-
-
-    // Download tracking
-    const downloadButtons = document.querySelectorAll('.download-btn');
-    
-    downloadButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const fileId = this.getAttribute('data-file-id');
-            const fileName = this.getAttribute('data-file-name');
-            const downloadStatusEl = document.getElementById(`download-status-${fileId}`);
-            
-            // Disable download button during download
-            this.disabled = true;
-            
-            // Show initial download status
-            downloadStatusEl.innerHTML = `
-                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="sr-only">Downloading...</span>
-                </div>
-            `;
-            
-            // Fetch download status
-            fetch(`/download/${fileId}/`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Download failed');
-                    }
-                    
-                    // Trigger file download
-                    return response.blob();
-                })
-                .then(blob => {
-                    // Create a link to download the file
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    
-                    // Update status
-                    downloadStatusEl.innerHTML = `
-                        <span class="text-success">
-                            <i class="fas fa-check-circle"></i> Download Complete
-                        </span>
-                    `;
-                })
-                .catch(error => {
-                    // Handle download error
-                    downloadStatusEl.innerHTML = `
-                        <span class="text-danger">
-                            <i class="fas fa-times-circle"></i> Download Failed
-                        </span>
-                    `;
-                    console.error('Download error:', error);
-                })
-                .finally(() => {
-                    // Re-enable download button
-                    this.disabled = false;
-                });
-        });
-    });
-
-
 });
 </script>
-
-<style>
-    .download-status {
-        font-size: 0.8rem;
-    }
-    .spinner-border-sm {
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.5rem;
-    }
-    </style>
 
 {% endblock %}
