@@ -111,3 +111,29 @@ class FileChunk(models.Model):
         self.is_verified = matches
         self.save(update_fields=['is_verified'])
         return matches
+    
+
+
+
+
+
+class Node(models.Model):
+    name = models.CharField(max_length=100)
+    status = models.CharField(max_length=10)  # e.g., 'running', 'stopped'
+    capacity = models.IntegerField()
+    used_space = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+    
+
+
+
+
+class DataObject(models.Model):
+    file_metadata = models.ForeignKey(FileMetadata, on_delete=models.CASCADE)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE)
+    size = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.file_metadata.file_name} on {self.node.name}"

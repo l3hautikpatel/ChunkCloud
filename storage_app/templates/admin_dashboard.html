@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    {% load static %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: none;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #333;
+            color: #fff;
+            font-weight: bold;
+        }
+        .table {
+            color: #fff;
+        }
+        .table thead {
+            background-color: #333;
+        }
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #444;
+        }
+        .status-online {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-offline {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .alert-custom {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #dc3545;
+        }
+        .info-box {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .info-box h4 {
+            margin-bottom: 10px;
+        }
+        .info-box p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Server Status Warning -->
+        {% if server_status_message %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-custom alert-dismissible fade show" role="alert">
+                    <strong>Warning:</strong> {{ server_status_message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" class="text-white">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <h1 class="text-center mb-4">Admin Dashboard</h1>
+
+        <!-- Server Information -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="info-box">
+                    <h4>Buckets</h4>
+                    <p>{{ server_info.buckets }}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <h4>Objects</h4>
+                    <p>{{ server_info.objects }}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <h4>Reported Usage</h4>
+                    <p>{{ server_info.reported_usage }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Server and Drive Status -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-box">
+                    <h4>Servers</h4>
+                    <p>Online: <span class="status-online">{{ server_info.servers_online }}</span></p>
+                    <p>Offline: <span class="status-offline">{{ server_info.servers_offline }}</span></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-box">
+                    <h4>Drives</h4>
+                    <p>Online: <span class="status-online">{{ server_info.drives_online }}</span></p>
+                    <p>Offline: <span class="status-offline">{{ server_info.drives_offline }}</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buckets and Data Objects -->
+        <div class="row">
+            <!-- Buckets Table -->
+            <div class="col-md-4">
+                <h2>Buckets</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bucket in buckets %}
+                        <tr>
+                            <td>{{ bucket.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Data Objects Table -->
+            <div class="col-md-8">
+                <h2>Data Objects</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Bucket</th>
+                            <th>Object Name</th>
+                            <th>Size</th>
+                            <th>R/W Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obj in data_objects %}
+                        <tr>
+                            <td>{{ obj.bucket }}</td>
+                            <td>{{ obj.object_name }}</td>
+                            <td>{{ obj.size }}</td>
+                            <td>{{ obj.permission }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Users</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Server Statuses Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Server Statuses</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Server URL</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for server in server_statuses %}
+                        <tr>
+                            <td>{{ server.url }}</td>
+                            <td class="{% if server.status == 'Online' %}status-online{% else %}status-offline{% endif %}">
+                                {{ server.status }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Drive Statuses Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Drive Statuses</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Server URL</th>
+                            <th>Drive Path</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for server in server_statuses %}
+                            {% for drive in server.drives %}
+                            <tr>
+                                <td>{{ server.url }}</td>
+                                <td>{{ drive.path }}</td>
+                                <td class="{% if drive.status == 'Online' %}status-online{% else %}status-offline{% endif %}">
+                                    {{ drive.status }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

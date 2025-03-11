@@ -16,6 +16,7 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('files/', views.files_view, name='files'),
     path('download/<str:file_id>/', views.download_file_view, name='download_file'),
+    path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
 
 
 
