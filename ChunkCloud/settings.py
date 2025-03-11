@@ -174,9 +174,6 @@ MINIO_USE_HTTPS = env.bool("MINIO_USE_HTTPS", default=False)
 
 
 
-
-
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

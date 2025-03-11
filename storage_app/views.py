@@ -89,37 +89,37 @@ def generate_file_id():
 
 
 
-@login_required(login_url='login')
-def files_view(request):
-    """
-    Displays the user's uploaded files and handles file uploads.
-    """
-    user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
+# @login_required(login_url='login')
+# def files_view(request):
+#     """
+#     Displays the user's uploaded files and handles file uploads.
+#     """
+#     user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
 
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES['file']
+#     if request.method == 'POST':
+#         form = FileUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             file = request.FILES['file']
             
-            # Chunk file and create metadata
-            file_metadata = chunk_file(
-                file, 
-                request.user, 
-                description=form.cleaned_data.get('description')
-            )
+#             # Chunk file and create metadata
+#             file_metadata = chunk_file(
+#                 file, 
+#                 request.user, 
+#                 description=form.cleaned_data.get('description')
+#             )
             
-            if file_metadata:
-                messages.success(request, "File uploaded successfully")
-                return redirect('files')
-            else:
-                messages.error(request, "File upload failed")
-    else:
-        form = FileUploadForm()
+#             if file_metadata:
+#                 messages.success(request, "File uploaded successfully")
+#                 return redirect('files')
+#             else:
+#                 messages.error(request, "File upload failed")
+#     else:
+#         form = FileUploadForm()
     
-    return render(request, "files.html", {
-        "files": user_files, 
-        "form": form
-    })
+#     return render(request, "files.html", {
+#         "files": user_files, 
+#         "form": form
+#     })
 
 
 
@@ -130,45 +130,43 @@ def files_view(request):
 
 
 
-@login_required
-def download_file_view(request, file_id):
-    """
-    Download a file by its file_id
-    """
-    try:
-        # Retrieve the file metadata
-        file_metadata = FileMetadata.objects.get(
-            file_id=file_id, 
-            user=request.user
-        )
+# @login_required
+# def download_file_view(request, file_id):
+#     """
+#     Download a file by its file_id
+#     """
+#     try:
+#         # Retrieve the file metadata
+#         file_metadata = FileMetadata.objects.get(
+#             file_id=file_id, 
+#             user=request.user
+#         )
         
-        # Merge chunks
-        merged_file_path = merge_chunks(file_metadata)
+#         # Merge chunks
+#         merged_file_path = merge_chunks(file_metadata)
         
-        if not merged_file_path:
-            raise Http404("File could not be reconstructed")
+#         if not merged_file_path:
+#             raise Http404("File could not be reconstructed")
         
-        # Prepare file response
-        response = FileResponse(
-            open(merged_file_path, 'rb'), 
-            as_attachment=True, 
-            filename=file_metadata.file_name
-        )
+#         # Prepare file response
+#         response = FileResponse(
+#             open(merged_file_path, 'rb'), 
+#             as_attachment=True, 
+#             filename=file_metadata.file_name
+#         )
         
-        # Optional: Update last downloaded timestamp
-        file_metadata.last_downloaded_at = timezone.now()
-        file_metadata.save()
+#         # Optional: Update last downloaded timestamp
+#         file_metadata.last_downloaded_at = timezone.now()
+#         file_metadata.save()
         
-        return response
+#         return response
     
-    except FileMetadata.DoesNotExist:
-        raise Http404("File not found")
-    except Exception as e:
-        # logger.error(f"Download failed: {e}")
-        print(f"Download failed: {e}")
-        raise Http404("Download failed")
-
-
+#     except FileMetadata.DoesNotExist:
+#         raise Http404("File not found")
+#     except Exception as e:
+#         # logger.error(f"Download failed: {e}")
+#         print(f"Download failed: {e}")
+#         raise Http404("Download failed")
 
 
 
@@ -220,7 +218,7 @@ def files_view(request):
                     operation_log.error_message = "Chunking process failed"
                     operation_log.save()
                     
-                    messages.error(request, "File upload failed")
+                    raise Http404("File upload failed")
             
             except Exception as e:
                 # Update log with unexpected error
@@ -228,7 +226,7 @@ def files_view(request):
                 operation_log.error_message = str(e)
                 operation_log.save()
                 
-                messages.error(request, f"File upload failed: {e}")
+                raise Http404("File upload failed")
     else:
         form = FileUploadForm()
     
@@ -236,3 +234,67 @@ def files_view(request):
         "files": user_files, 
         "form": form
     })
+
+
+
+from .utils.file_operation_tracker import FileOperationLog, FileOperationStatus
+
+@login_required
+def download_file_view(request, file_id):
+    """
+    Download a file by its file_id with tracking
+    """
+    try:
+        # Retrieve the file metadata
+        file_metadata = FileMetadata.objects.get(
+            file_id=file_id, 
+            user=request.user
+        )
+        
+        # Log the start of download
+        operation_log = FileOperationLog.log_operation(
+            user=request.user,
+            file_name=file_metadata.file_name,
+            operation_type='download',
+            status=FileOperationStatus.DOWNLOADING,
+            file_id=file_id
+        )
+        
+        # Merge chunks
+        merged_file_path = merge_chunks(file_metadata)
+        
+        if not merged_file_path:
+            # Update log with failure
+            operation_log.status = FileOperationStatus.DOWNLOAD_FAILED
+            operation_log.error_message = "File reconstruction failed"
+            operation_log.save()
+            
+            raise Http404("File could not be reconstructed")
+        
+        # Prepare file response
+        response = FileResponse(
+            open(merged_file_path, 'rb'), 
+            as_attachment=True, 
+            filename=file_metadata.file_name
+        )
+        
+        # Update last downloaded timestamp
+        file_metadata.last_downloaded_at = timezone.now()
+        file_metadata.save()
+        
+        # Update log with success
+        operation_log.status = FileOperationStatus.DOWNLOAD_COMPLETE
+        operation_log.save()
+        
+        return response
+    
+    except FileMetadata.DoesNotExist:
+        raise Http404("File not found")
+    except Exception as e:
+        # Log unexpected errors
+        if 'operation_log' in locals():
+            operation_log.status = FileOperationStatus.DOWNLOAD_FAILED
+            operation_log.error_message = str(e)
+            operation_log.save()
+        
+        raise Http404("Download failed")
