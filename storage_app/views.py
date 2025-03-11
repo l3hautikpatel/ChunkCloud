@@ -176,107 +176,63 @@ def download_file_view(request, file_id):
 
 
 
+from .utils.file_operation_tracker import FileOperationLog, FileOperationStatus
 
+@login_required(login_url='login')
+def files_view(request):
+    """
+    Displays the user's uploaded files and handles file uploads.
+    """
+    user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
 
-
-
-
-# @login_required
-# def download_file_view(request, file_id):
-#     # Get the file metadata
-#     file_metadata = get_object_or_404(FileMetadata, file_id=file_id)
-
-#     # Download the file from MinIO    print the name of the file
-#     response = HttpResponse(file_metadata.file, content_type=file_metadata.file_type)
-#     response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
-#     return response
-
-
-
-
-
-
-
-
-
-
-
-
-# @login_required(login_url='login')
-# def files_view(request):
-#     """
-#     Displays the user's uploaded files and handles file uploads.
-#     """
-#     user_files = FileMetadata.objects.filter(user=request.user).order_by("-uploaded_at")
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            
+            # Log the start of upload
+            operation_log = FileOperationLog.log_operation(
+                user=request.user,
+                file_name=file.name,
+                operation_type='upload',
+                status=FileOperationStatus.UPLOADING
+            )
+            
+            try:
+                # Chunk file and create metadata
+                file_metadata = chunk_file(
+                    file, 
+                    request.user, 
+                    description=form.cleaned_data.get('description')
+                )
+                
+                if file_metadata:
+                    # Update log with success
+                    operation_log.status = FileOperationStatus.UPLOAD_COMPLETE
+                    operation_log.file_id = file_metadata.file_id
+                    operation_log.save()
+                    
+                    messages.success(request, "File uploaded successfully")
+                    return redirect('files')
+                else:
+                    # Update log with failure
+                    operation_log.status = FileOperationStatus.UPLOAD_FAILED
+                    operation_log.error_message = "Chunking process failed"
+                    operation_log.save()
+                    
+                    messages.error(request, "File upload failed")
+            
+            except Exception as e:
+                # Update log with unexpected error
+                operation_log.status = FileOperationStatus.UPLOAD_FAILED
+                operation_log.error_message = str(e)
+                operation_log.save()
+                
+                messages.error(request, f"File upload failed: {e}")
+    else:
+        form = FileUploadForm()
     
-
-#     if request.method == 'POST':
-#         form = FileUploadForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             try:
-#                 # Get the uploaded file and its details
-#                 uploaded_file = request.FILES['file']
-#                 file_size = uploaded_file.size
-#                 original_filename = uploaded_file.name
-#                 file_extension = os.path.splitext(original_filename)[1]
-                
-#                 # Generate unique file ID
-#                 file_id = generate_file_id()
-                
-#                 # Upload to MinIO
-#                 file_url = upload_file(uploaded_file, file_id)
-                
-#                 # Create metadata instance but don't save yet
-#                 metadata = form.save(commit=False)
-#                 metadata.user = request.user
-#                 metadata.file_id = file_id
-#                 metadata.file_size = file_size
-#                 metadata.file_url = file_url
-#                 # Add extension to the user-provided filename
-#                 # metadata.file_name = f"{original_filename}{file_extension}"
-#                 metadata.file_name = f"{original_filename}"
-#                 # Now save to database
-#                 metadata.save()
-                
-#                 messages.success(request, "File uploaded successfully!")
-#                 return redirect('files')
-                
-#             except Exception as e:
-#                 messages.error(request, f"Error uploading file: {str(e)}")
-#         else:
-#             messages.error(request, "Form validation failed")
-#     else:
-#         form = FileUploadForm()
-
-#     return render(request, "files.html", {
-#         "files": user_files, 
-#         "form": form
-#     })
-
-
-
-
-# @login_required
-# def download_file_view(request, file_id):
-#     # Get the file metadata
-#     file_metadata = get_object_or_404(FileMetadata, file_id=file_id, user=request.user)
-    
-#     try:
-#         # Get the file from MinIO
-#         file_data = download_file(file_id)
-        
-#         # Create the response
-#         response = HttpResponse(file_data.read())
-        
-#         # Set the content disposition and filename
-#         response['Content-Disposition'] = f'attachment; filename="{file_metadata.file_name}"'
-        
-#         # Update last downloaded timestamp
-#         file_metadata.last_downloaded_at = now()
-#         file_metadata.save()
-        
-#         return response
-        
-#     except Exception as e:
-#         messages.error(request, f"Error downloading file: {str(e)}")
-#         return redirect('files')
+    return render(request, "files.html", {
+        "files": user_files, 
+        "form": form
+    })

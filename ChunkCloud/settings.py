@@ -173,3 +173,29 @@ MINIO_USE_HTTPS = env.bool("MINIO_USE_HTTPS", default=False)
 
 
 
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'chunkcloud_errors.log',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'storage_app': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
