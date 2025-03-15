@@ -238,6 +238,7 @@ def files_view(request):
     
     return render(request, "files.html", {
         "files": user_files, 
+        "files_count": user_files.count(),
         "form": form
     })
 

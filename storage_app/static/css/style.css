@@ -1,36 +1,38 @@
+
+
 :root {
-    /* Enhanced Dark Mode Palette */
+    /* Light Mode Palette */
+    --background-primary: #f8f9fa;
+    --background-secondary: #ffffff;
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --accent-primary: #4CAF50;
+    --accent-secondary: #45a049;
+    --surface: #e9ecef;
+    --border-color: #ced4da;
+    --hover-overlay: rgba(76, 175, 80, 0.1);
+    --download-color: #007bff;
+    --upload-color: #ffc107;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+}
+
+[data-theme="dark"] {
     --background-primary: #0f1011;
     --background-secondary: #1a1c1e;
     --text-primary: #e6e6e6;
     --text-secondary: #a0a0a0;
-    --accent-primary: #4CAF50;  /* Consistent green accent */
+    --accent-primary: #4CAF50;
     --accent-secondary: #45a049;
     --surface: #252728;
     --border-color: #2c3e50;
     --hover-overlay: rgba(76, 175, 80, 0.1);
-    --background-primary: #0f1011;
-    --background-secondary: #1a1c1e;
-    --text-primary: #e6e6e6;
-    --text-secondary: #a0a0a0;
-    --accent-primary: #4CAF50;
-    --accent-secondary: #45a049;
-    --surface: #252728;
-    --border-color: #2c3e50;
     --download-color: #2196F3;
     --upload-color: #FFC107;
     --success-color: #4CAF50;
     --error-color: #F44336;
-    --background-primary: #0f1011;
-    --background-secondary: #1a1c1e;
-    --text-primary: #e6e6e6;
-    --text-secondary: #a0a0a0;
-    --accent-primary: #4CAF50;
-    --accent-secondary: #45a049;
-    --surface: #252728;
-    --border-color: #2c3e50;
-
 }
+
 
 * {
     margin: 0;
@@ -62,6 +64,29 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--hover-overlay);
+}
+
+.theme-toggle i {
+    font-size: 1.2rem;
+}
+
 
 /* Enhanced Header and Navigation */
 header {
@@ -591,14 +616,6 @@ footer {
 
 
 
-/* files css file */
-
-
-
-
-
-
-
 
 
 
@@ -879,6 +896,12 @@ footer {
 
 
 
+
+
+
+
+/* file css file  */
+
 .files-container {
     background-color: var(--background-secondary);
     border-radius: 16px;
@@ -1127,3 +1150,18 @@ margin-bottom: 15px;
 font-size: 24px;
 margin: 0;
 }
+
+
+.css_file_icon {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.css_file_icon_pdf { color: #FF0000; }        /* Red */
+.css_file_icon_doc { color: #2196F3; }        /* Blue */
+.css_file_icon_xls { color: #4CAF50; }        /* Green */
+.css_file_icon_image { color: #9C27B0; }      /* Purple */
+.css_file_icon_video { color: #FF9800; }      /* Orange */
+.css_file_icon_zip { color: #795548; }        /* Brown */
+.css_file_icon_folder { color: #FFC107; }     /* Amber/Yellow */
+.css_file_icon_default { color: var(--text-secondary); }

@@ -75,29 +75,88 @@
     </footer>
 
     <script>
+       
+            
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Theme Toggle Logic
+            // Theme switcher functionality
             const themeToggle = document.querySelector('.theme-toggle');
-            const htmlElement = document.documentElement;
-
-            // Check for saved theme preference or default to dark
-            const currentTheme = localStorage.getItem('theme') || 'dark';
-            htmlElement.setAttribute('data-theme', currentTheme);
-
-            themeToggle.addEventListener('click', () => {
-                const newTheme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                htmlElement.setAttribute('data-theme', newTheme);
+            
+            // Check for saved theme preference or use system preference
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Set initial theme
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                updateThemeIcon('light');
+            }
+            
+            // Toggle theme when button is clicked
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Update theme
+                document.documentElement.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
                 
-                // GSAP Theme Transition Animation
-                gsap.fromTo(document.body, 
-                    { opacity: 0.5 }, 
-                    { 
-                        opacity: 1, 
-                        duration: 0.5,
-                        ease: "power1.inOut"
-                    }
-                );
+                // Update icon
+                updateThemeIcon(newTheme);
+                
+                // Optional animation effect
+                flashTransition();
+            });
+            
+            // Function to update the theme icon
+            function updateThemeIcon(theme) {
+                const icon = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-sun'; // Show sun in dark mode
+                } else {
+                    icon.className = 'fas fa-moon'; // Show moon in light mode
+                }
+            }
+            
+            // Optional: subtle flash effect during transition
+            function flashTransition() {
+                const flash = document.createElement('div');
+                flash.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(255, 255, 255, 0.1);
+                    pointer-events: none;
+                    z-index: 9999;
+                    opacity: 0;
+                    transition: opacity 0.1s ease;
+                `;
+                document.body.appendChild(flash);
+                
+                setTimeout(() => {
+                    flash.style.opacity = '0.2';
+                    setTimeout(() => {
+                        flash.style.opacity = '0';
+                        setTimeout(() => {
+                            flash.remove();
+                        }, 100);
+                    }, 50);
+                }, 0);
+            }
+            
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                const newTheme = e.matches ? 'dark' : 'light';
+                // Only change if user hasn't manually set a preference
+                if (!localStorage.getItem('theme')) {
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateThemeIcon(newTheme);
+                }
             });
 
             // GSAP Animations
@@ -109,13 +168,27 @@
             });
 
             gsap.from('nav a', {
-
                 x: -20,
                 stagger: 0.1,
-                duration: 0.5,
+                duration: 0.5, 
                 ease: "power2.out"
             });
-        });
+
+            // GSAP Theme Transition Animation
+            gsap.fromTo(document.body, 
+                { opacity: 0.9 }, 
+                { 
+                    opacity: 1, 
+                    duration: 2,
+                    ease: "power1.inOut"
+                }
+            );
+        });          
+
+
+
+
+        
     </script>
 </body>
 </html>
