@@ -18,8 +18,9 @@ urlpatterns = [
     path('download/<str:file_id>/', views.download_file_view, name='download_file'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
 
+    path('delete/<str:file_id>/', views.delete_file, name='delete_file'),
 
-
+    path('about/', views.about_view, name='about'),
 
 
 

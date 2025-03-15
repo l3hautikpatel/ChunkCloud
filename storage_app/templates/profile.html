@@ -3,25 +3,100 @@
 {% load static %}
 {% block content %}
 <div class="profile-container">
-    <h2>User Profile</h2>
-    <div class="profile-details">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Full Name:</strong> {{ user.first_name }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Registered on:</strong> {{ user.date_joined|date:"F j, Y, g:i a" }}</p>
-        <p><strong>Last Login:</strong> 
-            {% if user.last_login %}
-                {{ user.last_login|date:"F j, Y, g:i a" }}
-            {% else %}
-                First login
-            {% endif %}
+   
+<div class="profile-container css_profile_container">
+    <div class="css_profile_header">
+        <i class="fas fa-user-circle css_profile_icon" style="font-size: 2rem;"></i>
+        <h2>User Profile</h2>
+    </div>
+
+    <div class="profile-details css_profile_details">
+        <p>
+            <strong><i class="fas fa-user css_profile_icon"></i> Username</strong>
+            <span>{{ user.username }}</span>
         </p>
-        <!-- If you have a related UserProfile for extra fields -->
+        <p>
+            <strong><i class="fas fa-id-badge css_profile_icon"></i> Full Name</strong>
+            <span>{{ user.first_name }}</span>
+        </p>
+        <p>
+            <strong><i class="fas fa-envelope css_profile_icon"></i> Email</strong>
+            <span>{{ user.email }}</span>
+        </p>
+        <p>
+            <strong><i class="fas fa-calendar-plus css_profile_icon"></i> Registered on</strong>
+            <span>{{ user.date_joined|date:"F j, Y, g:i a" }}</span>
+        </p>
+        <p>
+            <strong><i class="fas fa-sign-in-alt css_profile_icon"></i> Last Login</strong>
+            <span>
+                {% if user.last_login %}
+                    {{ user.last_login|date:"F j, Y, g:i a" }}
+                {% else %}
+                    First login
+                {% endif %}
+            </span>
+        </p>
+        
         {% if user.userprofile %}
-            <p><strong>Date of Birth:</strong> {{ user.userprofile.date_of_birth }}</p>
-            <p><strong>Gender:</strong> {{ user.userprofile.gender }}</p>
+            <p>
+                <strong><i class="fas fa-birthday-cake css_profile_icon"></i> Date of Birth</strong>
+                <span>{{ user.userprofile.date_of_birth }}</span>
+            </p>
+            <p>
+                <strong><i class="fas fa-venus-mars css_profile_icon"></i> Gender</strong>
+                <span>{{ user.userprofile.gender }}</span>
+            </p>
         {% endif %}
     </div>
-    <!-- Add additional sections as needed -->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Container Entrance Animation
+        gsap.from('.css_profile_container', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        // Profile Details Animation
+        gsap.from('.css_profile_details p', {
+            opacity: 0,
+            x: -50,
+            stagger: 0.1,
+            duration: 0.7,
+            ease: "back.out(1.7)"
+        });
+
+        // Header Animation
+        gsap.from('.css_profile_header', {
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.8,
+            ease: "elastic.out(1, 0.3)"
+        });
+
+        // Hover Effects
+        const profileContainer = document.querySelector('.css_profile_container');
+        profileContainer.addEventListener('mouseenter', () => {
+            gsap.to(profileContainer, {
+                scale: 1.02,
+                boxShadow: '0 15px 30px rgba(0,0,0,0.3)',
+                duration: 0.3
+            });
+        });
+
+        profileContainer.addEventListener('mouseleave', () => {
+            gsap.to(profileContainer, {
+                scale: 1,
+                boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
+                duration: 0.3
+            });
+        });
+    });
+</script>
 </div>
 {% endblock %}
