@@ -2,232 +2,7 @@
 {% load static %}
 {% block content %}
 <style>
-    :root {
-        --background-primary: #0f1011;
-        --background-secondary: #1a1c1e;
-        --text-primary: #e6e6e6;
-        --text-secondary: #a0a0a0;
-        --accent-primary: #4CAF50;
-        --accent-secondary: #45a049;
-        --surface: #252728;
-        --border-color: #2c3e50;
-        --download-color: #2196F3;
-        --upload-color: #FFC107;
-        --success-color: #4CAF50;
-        --error-color: #F44336;
-    }
-
-    .files-container {
-        background-color: var(--background-secondary);
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-
-    /* Upload Form Styling */
-    #upload-form {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        background-color: var(--surface);
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 2rem;
-        border: 2px dashed var(--accent-primary);
-        transition: all 0.3s ease;
-    }
-
-    #upload-form input[type="text"],
-    #upload-form input[type="file"] {
-        background-color: var(--background-primary);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        padding: 0.5rem;
-        border-radius: 8px;
-        flex-grow: 1;
-    }
-
-    #upload-submit-btn {
-        background-color: var(--accent-primary);
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    #upload-submit-btn:hover {
-        background-color: var(--accent-secondary);
-    }
-
-    /* Upload Progress Modal */
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: none; /* Changed from flex to none by default */
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-    
-    .modal-content {
-        background-color: var(--surface);
-        padding: 2rem;
-        border-radius: 16px;
-        width: 90%;
-        max-width: 500px;
-        text-align: center;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-
-    .progress {
-        background-color: var(--background-primary);
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 1rem 0;
-    }
-
-    .progress-bar {
-        background-color: var(--accent-primary);
-        height: 20px;
-        transition: width 0.5s ease;
-    }
-
-    .progress-bar.bg-success {
-        background-color: var(--success-color);
-    }
-
-    .progress-bar.bg-danger {
-        background-color: var(--error-color);
-    }
-
-    /* File Table Styling */
-    table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        background-color: var(--surface);
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    table thead {
-        background-color: var(--background-primary);
-        color: var(--accent-primary);
-    }
-
-    table th, table td {
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Download Button and Status */
-    .download-btn {
-        background-color: var(--download-color);
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .download-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .download-status {
-        display: flex;
-        align-items: center;
-        font-size: 0.8rem;
-    }
-
-    .spinner-border-sm {
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.5rem;
-        color: var(--download-color);
-    }
-
-    .text-success {
-        color: var(--success-color);
-    }
-
-    .text-danger {
-        color: var(--error-color);
-    }
-
-    * Add to existing CSS */
-.download-status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    height: 30px; /* Consistent height */
-}
-
-.download-status .spinner-border {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.download-complete-status,
-.download-error-status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.download-complete-status i,
-.download-error-status i {
-    margin-right: 0.3rem;
-}
-
-.file-actions {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.download-btn {
-    background-color: transparent;
-    border: 2px solid var(--accent-primary);
-    color: var(--accent-primary);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.download-btn:hover {
-    background-color: rgba(76, 175, 80, 0.1);
-}
-
-.delete-btn {
-    background-color: transparent;
-    border: 2px solid var(--error-color);
-    color: var(--error-color);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.delete-btn:hover {
-    background-color: rgba(244, 67, 54, 0.1);
-}
+   
 
 </style>
 
@@ -255,11 +30,25 @@
     <!-- Existing upload form -->
     <form id="upload-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" name="file_name" placeholder="File Name" required>
-        <input type="text" name="description" placeholder="Description">
-        <input type="file" name="file" required style="display: inline-block; color: #a0a0a0 ;border-radius: 5px; cursor: pointer;">
+        <input type="text" name="file_name" id="file-name" placeholder="File Name" required>
+        <input type="text" name="description" id="description" placeholder="Description">
+        <input type="file" name="file" id="file-input" required style="display: inline-block; color: #a0a0a0; border-radius: 5px; cursor: pointer;">
         <button type="submit" id="upload-submit-btn">Upload</button>
     </form>
+    
+    <!-- Hidden full-screen overlay for drag and drop -->
+    <div id="drag-overlay" class="drag-overlay">
+        <div class="drag-overlay-content">
+            <div class="drag-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+            </div>
+            <p>Drop file to upload</p>
+        </div>
+    </div>
 
     <!-- Display User Files -->
     {% if files %}
@@ -317,6 +106,92 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    const dragOverlay = document.getElementById("drag-overlay");
+    const fileInput = document.getElementById("file-input");
+    const fileNameInput = document.getElementById("file-name");
+    const descriptionInput = document.getElementById("description");
+    
+    // Show overlay when dragging files anywhere over the document
+    document.addEventListener("dragenter", function(e) {
+        e.preventDefault();
+        dragOverlay.classList.add("active");
+    });
+    
+    // Prevent default on dragover to allow drop
+    document.addEventListener("dragover", function(e) {
+        e.preventDefault();
+    });
+    
+    // Handle dragleave when leaving the document
+    document.addEventListener("dragleave", function(e) {
+        e.preventDefault();
+        // Only hide if leaving the entire window
+        if (e.clientX <= 0 || e.clientY <= 0 || 
+            e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+            dragOverlay.classList.remove("active");
+        }
+    });
+    
+    // Handle the actual drop event
+    document.addEventListener("drop", function(e) {
+        e.preventDefault();
+        dragOverlay.classList.remove("active");
+        
+        if (e.dataTransfer.files.length) {
+            const file = e.dataTransfer.files[0];
+            
+            // Set the file input's files
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+            
+            // Auto-fill filename if empty
+            if (!fileNameInput.value) {
+                fileNameInput.value = file.name.split('.')[0];
+            }
+            
+            // Trigger change event on the file input
+            const event = new Event('change', { bubbles: true });
+            fileInput.dispatchEvent(event);
+            descriptionInput.value = "Fast uploaded throught the drag and drop file"
+            // Automatically submit the form
+            
+        }
+    });
+    
+    // Handle overlay-specific events
+    dragOverlay.addEventListener("dragover", function(e) {
+        e.preventDefault();
+    });
+    
+    dragOverlay.addEventListener("drop", function(e) {
+        e.preventDefault();
+        dragOverlay.classList.remove("active");
+        
+        if (e.dataTransfer.files.length) {
+            const file = e.dataTransfer.files[0];
+            
+            // Set the file input's files
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+            
+            // Auto-fill filename if empty
+            if (!fileNameInput.value) {
+                fileNameInput.value = file.name.split('.')[0];
+            }
+            
+            // Trigger change event on the file input
+            const event = new Event('change', { bubbles: true });
+            fileInput.dispatchEvent(event);
+        }
+    });
+
+
+
+
+
     const uploadForm = document.getElementById('upload-form');
     const uploadProgressModal = document.getElementById('upload-progress-modal');
     const uploadProgressBar = document.getElementById('upload-progress-bar');
@@ -345,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (preProcessStage < 100) {
                 preProcessStage += 5;
                 uploadProgressBar.style.width = `${preProcessStage}%`;
-                uploadProgressBar.textContent = `${preProcessStage}%`;
+                // uploadProgressBar.textContent = `${preProcessStage}%`;
                 uploadStatusMessage.textContent = `Pre-processing: ${preProcessStage}%`;
                 uploadProgressBar.style.backgroundColor = 'var(--accent-primary)';
             } else {
@@ -366,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.lengthComputable) {
                 const percentComplete = Math.round((event.loaded / event.total) * 100);
                 uploadProgressBar.style.width = `${percentComplete}%`;
-                uploadProgressBar.textContent = `${percentComplete}%`;
+                // uploadProgressBar.textContent = `${percentComplete}%`;
                 uploadStatusMessage.textContent = `Uploading: ${percentComplete}%`;
             }
         };
@@ -378,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Success stage
                 uploadStatusMessage.textContent = 'Upload Complete!';
                 uploadProgressBar.style.width = '100%';
-                uploadProgressBar.textContent = '100%';
+                // uploadProgressBar.textContent = '100%';
                 uploadProgressBar.style.backgroundColor = 'var(--success-color)';
                 
                 // Wait for 2 seconds and then close

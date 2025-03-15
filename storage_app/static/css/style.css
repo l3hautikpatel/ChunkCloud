@@ -9,6 +9,27 @@
     --surface: #252728;
     --border-color: #2c3e50;
     --hover-overlay: rgba(76, 175, 80, 0.1);
+    --background-primary: #0f1011;
+    --background-secondary: #1a1c1e;
+    --text-primary: #e6e6e6;
+    --text-secondary: #a0a0a0;
+    --accent-primary: #4CAF50;
+    --accent-secondary: #45a049;
+    --surface: #252728;
+    --border-color: #2c3e50;
+    --download-color: #2196F3;
+    --upload-color: #FFC107;
+    --success-color: #4CAF50;
+    --error-color: #F44336;
+    --background-primary: #0f1011;
+    --background-secondary: #1a1c1e;
+    --text-primary: #e6e6e6;
+    --text-secondary: #a0a0a0;
+    --accent-primary: #4CAF50;
+    --accent-secondary: #45a049;
+    --surface: #252728;
+    --border-color: #2c3e50;
+
 }
 
 * {
@@ -215,16 +236,6 @@ footer {
 
 
 
-:root {
-    --background-primary: #0f1011;
-    --background-secondary: #1a1c1e;
-    --text-primary: #e6e6e6;
-    --text-secondary: #a0a0a0;
-    --accent-primary: #4CAF50;
-    --accent-secondary: #45a049;
-    --surface: #252728;
-    --border-color: #2c3e50;
-}
 
 .css_login_container {
     display: flex;
@@ -406,7 +417,7 @@ footer {
 
 /* password reset css file */
 
-:root {
+/* :root {
     --background-primary: #0f1011;
     --background-secondary: #1a1c1e;
     --text-primary: #e6e6e6;
@@ -415,7 +426,7 @@ footer {
     --accent-secondary: #45a049;
     --surface: #252728;
     --border-color: #2c3e50;
-}
+} */
 
 .css_password_reset_container {
     display: flex;
@@ -864,3 +875,255 @@ footer {
 
 
 
+
+
+
+
+.files-container {
+    background-color: var(--background-secondary);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Upload Form Styling */
+#upload-form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--surface);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border: 2px dashed var(--accent-primary);
+    transition: all 0.3s ease;
+}
+
+#upload-form input[type="text"],
+#upload-form input[type="file"] {
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    flex-grow: 1;
+}
+
+#upload-submit-btn {
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#upload-submit-btn:hover {
+    background-color: var(--accent-secondary);
+}
+
+/* Upload Progress Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none; /* Changed from flex to none by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.progress {
+    background-color: var(--background-primary);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    background-color: var(--accent-primary);
+    height: 20px;
+    transition: width 0.5s ease;
+}
+
+.progress-bar.bg-success {
+    background-color: var(--success-color);
+}
+
+.progress-bar.bg-danger {
+    background-color: var(--error-color);
+}
+
+/* File Table Styling */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table thead {
+    background-color: var(--background-primary);
+    color: var(--accent-primary);
+}
+
+table th, table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Download Button and Status */
+.download-btn {
+    background-color: var(--download-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.download-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.download-status {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    color: var(--download-color);
+}
+
+.text-success {
+    color: var(--success-color);
+}
+
+.text-danger {
+    color: var(--error-color);
+}
+
+* Add to existing CSS */
+.download-status {
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.8rem;
+height: 30px; /* Consistent height */
+}
+
+.download-status .spinner-border {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.download-complete-status,
+.download-error-status {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.download-complete-status i,
+.download-error-status i {
+margin-right: 0.3rem;
+}
+
+.file-actions {
+display: flex;
+gap: 0.5rem;
+align-items: center;
+}
+
+.download-btn {
+background-color: transparent;
+border: 2px solid var(--accent-primary);
+color: var(--accent-primary);
+padding: 0.5rem 1rem;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+background-color: rgba(76, 175, 80, 0.1);
+}
+
+.delete-btn {
+background-color: transparent;
+border: 2px solid var(--error-color);
+color: var(--error-color);
+padding: 0.5rem 1rem;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+background-color: rgba(244, 67, 54, 0.1);
+}
+
+
+/* Overlay styles */
+.drag-overlay {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.7);
+z-index: 9999;
+color: white;
+}
+
+.drag-overlay.active {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.drag-overlay-content {
+text-align: center;
+padding: 30px;
+border: 3px dashed white;
+border-radius: 10px;
+background-color: rgba(0, 0, 0, 0.5);
+}
+
+.drag-icon {
+margin-bottom: 15px;
+}
+
+.drag-overlay-content p {
+font-size: 24px;
+margin: 0;
+}

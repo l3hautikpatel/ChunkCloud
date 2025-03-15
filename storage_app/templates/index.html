@@ -22,17 +22,18 @@
 <body>
     <header>
         <div class="navbar">
-            <div class="logo">
+            <a href="{% url 'index' %}" style="text-decoration: none;" >
+            <div class="logo"> 
                 <i class="fas fa-cloud"></i>
                 ChunkCloud
-            </div>
+            </div></a>
             <nav>
                 <a href="{% url 'index' %}">
                     <i class="fas fa-home"></i> Home
-                </a>
+                
                 <a href="{% url 'files' %}">
                     <i class="fas fa-file-upload"></i> Files
-                </a>
+                </a></a>
                 <a href="{% url 'about' %}" class="about">
                     <i class="fas fa-info-circle"></i> About
                 </a>
