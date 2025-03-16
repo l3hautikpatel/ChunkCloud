@@ -1,12 +1,8 @@
 {% extends "index.html" %}
 {% load static %}
 {% block content %}
-<style>
-   
 
-</style>
 
-<div class="files-container">
     <h2>My Files</h2>
 
     <!-- Download Progress Tracking -->
@@ -58,8 +54,9 @@
     <!-- Display User Files -->
     {% if files %}
     <div class="file-count" id="file-counter" >Total Files: {{ files|length }} </div>
+    <br>
     <table>
-        <thead>
+        <thead class="gradient-top-border">
             <tr>
                 <th>File Name</th>
                 <th>Size</th>
@@ -121,7 +118,7 @@
     {% else %}
         <p>No files to show.</p>
     {% endif %}
-</div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

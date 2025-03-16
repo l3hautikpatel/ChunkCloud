@@ -30,8 +30,8 @@ Links to the Django authentication system.
             </ul>
             {% endif %}
 
-            <div>
-                <input type="text" name="username" placeholder="Username" required>
+            <div>Username:
+                <input type="text" name="username" required>
                 {% if form.username.errors %}
                 <ul class="errorlist">
                     {% for error in form.username.errors %}
@@ -42,7 +42,8 @@ Links to the Django authentication system.
             </div>
 
             <div>
-                <input type="password" name="password" placeholder="Password" required>
+                Password:
+                <input type="password" name="password"  required>
                 {% if form.password.errors %}
                 <ul class="errorlist">
                     {% for error in form.password.errors %}
