@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+<div class="css_404_error-container">
+    <div class="css_404_error-content">
+        <div class="css_404_error-number">
+            <div class="css_404_digit">4</div>
+            <div class="css_404_digit">0</div>
+            <div class="css_404_digit">4</div>
+        </div>
+        <h1 class="css_404_error-title">Page Not Found</h1>
+        <p class="css_404_error-message">Oops! The page you're looking for doesn't exist or has been moved.</p>
+        <div class="css_404_error-actions">
+            <a href="{% url 'index' %}" class="css_404_btn-primary">Go to Homepage</a>
+            <a href="javascript:history.back()" class="css_404_btn-secondary">Go Back</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

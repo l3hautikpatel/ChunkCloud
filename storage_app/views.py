@@ -524,3 +524,9 @@ def admin_dashboard(request):
         'server_status_message': server_status_message
     }
     return render(request, 'admin_dashboard.html', context)
+
+
+
+
+def custom_404_view(request):
+    return render(request, '404.html', status=404)

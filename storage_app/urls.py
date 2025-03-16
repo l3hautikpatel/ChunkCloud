@@ -1,5 +1,5 @@
 # urls.py
-from django.urls import path
+from django.urls import path , re_path
 from . import views
 from django.contrib.auth import views as auth_views
 
@@ -46,5 +46,9 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
 
 
+
+
+
+    re_path(r'^.*$', views.custom_404_view, name='custom_404'),
 
 ]
