@@ -28,7 +28,7 @@ import urllib3
 
 def index(request): 
     # return HttpResponse("hello Home")
-    return render(request,'index.html')
+    return render(request,'hero.html')
 
 
 def register(request):
@@ -238,6 +238,7 @@ def files_view(request):
     
     return render(request, "files.html", {
         "files": user_files, 
+        "files_count": user_files.count(),
         "form": form
     })
 
@@ -307,6 +308,28 @@ def download_file_view(request, file_id):
     
     
 
+
+
+
+
+
+
+
+# view for the deleteing the files data from the meta data table in the sql 
+def delete_file(request, file_id):
+    try:
+        file_metadata = FileMetadata.objects.get(file_id=file_id, user=request.user)
+        file_metadata.delete()
+        # return redirect('files')
+        return HttpResponse("File deleted successfully")
+    except FileMetadata.DoesNotExist:
+        raise Http404("File not found")
+
+
+
+
+def about_view(request):
+    return render(request, 'about.html')
 
 
 
@@ -501,3 +524,9 @@ def admin_dashboard(request):
         'server_status_message': server_status_message
     }
     return render(request, 'admin_dashboard.html', context)
+
+
+
+
+def custom_404_view(request):
+    return render(request, '404.html', status=404)

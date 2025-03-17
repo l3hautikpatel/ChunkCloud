@@ -1,5 +1,5 @@
 # urls.py
-from django.urls import path
+from django.urls import path , re_path
 from . import views
 from django.contrib.auth import views as auth_views
 
@@ -18,8 +18,9 @@ urlpatterns = [
     path('download/<str:file_id>/', views.download_file_view, name='download_file'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
 
+    path('delete/<str:file_id>/', views.delete_file, name='delete_file'),
 
-
+    path('about/', views.about_view, name='about'),
 
 
 
@@ -45,5 +46,9 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
 
 
+
+
+
+    re_path(r'^.*$', views.custom_404_view, name='custom_404'),
 
 ]

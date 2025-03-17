@@ -1,128 +1,72 @@
+{% extends "index.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
-    {% load static %}
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 20px;
-            background-color: #121212;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .card {
-            background-color: #1e1e1e;
-            border: none;
-            margin-bottom: 20px;
-        }
-        .card-header {
-            background-color: #333;
-            color: #fff;
-            font-weight: bold;
-        }
-        .table {
-            color: #fff;
-        }
-        .table thead {
-            background-color: #333;
-        }
-        .table-bordered th, .table-bordered td {
-            border: 1px solid #444;
-        }
-        .status-online {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .status-offline {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .alert-custom {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #dc3545;
-        }
-        .info-box {
-            background-color: #1e1e1e;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .info-box h4 {
-            margin-bottom: 10px;
-        }
-        .info-box p {
-            margin: 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="container-fluid">
-        <!-- Server Status Warning -->
-        {% if server_status_message %}
+{% block content %}
+
+<div class="cssadmin-container container-fluid">
+    <!-- Server Status Warning -->
+    {% if server_status_message %}
         <div class="row mb-4">
-            <div class="col-12">
-                <div class="alert alert-custom alert-dismissible fade show" role="alert">
-                    <strong>Warning:</strong> {{ server_status_message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <div class="col-12 ">
+                <div class="alert-custom alert-dismissible fade show" role="alert">
+                    <strong></strong> {{ server_status_message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true" class="text-white">&times;</span>
                     </button>
                 </div>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
 
-        <h1 class="text-center mb-4">Admin Dashboard</h1>
+    <h1 class="cssadmin-header text-center mb-4">Admin Dashboard</h1>
 
-        <!-- Server Information -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="info-box">
-                    <h4>Buckets</h4>
-                    <p>{{ server_info.buckets }}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box">
-                    <h4>Objects</h4>
-                    <p>{{ server_info.objects }}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box">
-                    <h4>Reported Usage</h4>
-                    <p>{{ server_info.reported_usage }}</p>
-                </div>
+    <!-- Section 01: Stats Boxes -->
+    <div class="row cssadmin-stats-row mb-4 objects-row-3">
+        <div class="col-md-4 gradient-top-border">
+            <div class="cssadmin-stats-box">
+                <h4>Buckets</h4>
+                <p class="stats-value">{{ server_info.buckets }}</p>
             </div>
         </div>
-
-        <!-- Server and Drive Status -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="info-box">
-                    <h4>Servers</h4>
-                    <p>Online: <span class="status-online">{{ server_info.servers_online }}</span></p>
-                    <p>Offline: <span class="status-offline">{{ server_info.servers_offline }}</span></p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-box">
-                    <h4>Drives</h4>
-                    <p>Online: <span class="status-online">{{ server_info.drives_online }}</span></p>
-                    <p>Offline: <span class="status-offline">{{ server_info.drives_offline }}</span></p>
-                </div>
+        <div class="col-md-4 gradient-top-border">
+            <div class="cssadmin-stats-box">
+                <h4>Objects</h4>
+                <p class="stats-value">{{ server_info.objects }}</p>
             </div>
         </div>
+        <div class="col-md-4 gradient-top-border">
+            <div class="cssadmin-stats-box">
+                <h4>Reported Usage</h4>
+                <p class="stats-value">{{ server_info.reported_usage }}</p>
+            </div>
+        </div>
+    </div>
 
-        <!-- Buckets and Data Objects -->
-        <div class="row">
-            <!-- Buckets Table -->
-            <div class="col-md-4">
+    <!-- Section 02: Server and Drive Status -->
+    <div class="row cssadmin-stats-row mb-4 objects-row-2">
+        <div class="col-md-6 gradient-top-border">
+            <div class="cssadmin-stats-box">
+                <h4><i class="fas fa-server mr-2"></i>  Servers</h4>
+                <p>Online: <span class="server-status-icon online"></span><span class="status-online">{{ server_info.servers_online }}</span></p>
+                <p>Offline: <span class="server-status-icon offline"></span><span class="status-offline">{{ server_info.servers_offline }}</span></p>
+            </div>
+        </div>
+        <div class="col-md-6 gradient-top-border">
+            <div class="cssadmin-stats-box">
+                <h4><i class="fas fa-hdd mr-2"></i>  Drives</h4>
+                <p>Online: <span class="drive-status-icon online"></span><span class="status-online">{{ server_info.drives_online }}</span></p>
+                <p>Offline: <span class="drive-status-icon offline"></span><span class="status-offline">{{ server_info.drives_offline }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 03: Buckets and Data Objects -->
+    <div class="row mb-4 ">
+        <!-- Buckets Table -->
+        <div class="col-md-3 gradient-top-border">
+            <div class="cssadmin-table-container">
                 <h2>Buckets</h2>
-                <table class="table table-bordered">
+                <table class="cssadmin-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -137,11 +81,13 @@
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <!-- Data Objects Table -->
-            <div class="col-md-8">
+        <!-- Data Objects Table -->
+        <div class="col-md-9 gradient-top-border">
+            <div class="cssadmin-table-container">
                 <h2>Data Objects</h2>
-                <table class="table table-bordered">
+                <table class="cssadmin-table" id="dataObjectsTable">
                     <thead>
                         <tr>
                             <th>Bucket</th>
@@ -150,7 +96,7 @@
                             <th>R/W Permission</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="dataObjectsBody">
                         {% for obj in data_objects %}
                         <tr>
                             <td>{{ obj.bucket }}</td>
@@ -161,14 +107,17 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <div class="cssadmin-pagination" id="dataObjectsPagination"></div>
             </div>
         </div>
+    </div>
 
-        <!-- Users Table -->
-        <div class="row">
-            <div class="col-md-12">
+    <!-- Section 04: Users Table -->
+    <div class="row mb-4">
+        <div class="col-md-12 gradient-top-border">
+            <div class="cssadmin-table-container">
                 <h2>Users</h2>
-                <table class="table table-bordered">
+                <table class="cssadmin-table">
                     <thead>
                         <tr>
                             <th>Username</th>
@@ -186,12 +135,14 @@
                 </table>
             </div>
         </div>
+    </div>
 
-        <!-- Server Statuses Table -->
-        <div class="row">
-            <div class="col-md-12">
+    <!-- Section 05: Server and Drive Statuses -->
+    <div class="row mb-4 objects-row-2">
+        <div class="col-md-6 gradient-top-border">
+            <div class="cssadmin-table-container">
                 <h2>Server Statuses</h2>
-                <table class="table table-bordered">
+                <table class="cssadmin-table">
                     <thead>
                         <tr>
                             <th>Server URL</th>
@@ -203,6 +154,7 @@
                         <tr>
                             <td>{{ server.url }}</td>
                             <td class="{% if server.status == 'Online' %}status-online{% else %}status-offline{% endif %}">
+                                <span class="server-status-icon {% if server.status == 'Online' %}online{% else %}offline{% endif %}"></span>
                                 {{ server.status }}
                             </td>
                         </tr>
@@ -211,12 +163,10 @@
                 </table>
             </div>
         </div>
-
-        <!-- Drive Statuses Table -->
-        <div class="row">
-            <div class="col-md-12">
+        <div class="col-md-6 gradient-top-border">
+            <div class="cssadmin-table-container">
                 <h2>Drive Statuses</h2>
-                <table class="table table-bordered">
+                <table class="cssadmin-table">
                     <thead>
                         <tr>
                             <th>Server URL</th>
@@ -231,6 +181,7 @@
                                 <td>{{ server.url }}</td>
                                 <td>{{ drive.path }}</td>
                                 <td class="{% if drive.status == 'Online' %}status-online{% else %}status-offline{% endif %}">
+                                    <span class="drive-status-icon {% if drive.status == 'Online' %}online{% else %}offline{% endif %}"></span>
                                     {{ drive.status }}
                                 </td>
                             </tr>
@@ -242,9 +193,195 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <!-- GSAP Animation and Pagination JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script>
+        // GSAP animations
+        document.addEventListener('DOMContentLoaded', function() {
+
+
+            const closeButtons = document.querySelectorAll('[data-bs-dismiss="alert"]');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const alert = this.closest('.alert-custom');
+                    if (alert) {
+                        alert.classList.remove('show');
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 150);
+                    }
+                });
+            });
+            
+            // For Bootstrap 4 (as a fallback)
+            const oldCloseButtons = document.querySelectorAll('[data-dismiss="alert"]');
+            oldCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const alert = this.closest('.alert-custom');
+                    if (alert) {
+                        alert.classList.remove('show');
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 150);
+                    }
+                });
+            });
+
+
+            // Animate stats boxes
+            gsap.from('.cssadmin-stats-box', {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power2.out"
+            });
+            
+            // Animate tables
+            gsap.from('.cssadmin-table-container', {
+                y: 40,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.3,
+                delay: 0.5,
+                ease: "power2.out"
+            });
+        });
+
+        // Pagination for Data Objects table
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        const dataObjectsTable = document.getElementById('dataObjectsTable');
+        const dataObjectsBody = document.getElementById('dataObjectsBody');
+        const dataObjectsPagination = document.getElementById('dataObjectsPagination');
+        
+        function setupPagination() {
+            const rows = dataObjectsBody.querySelectorAll('tr');
+            const totalPages = Math.ceil(rows.length / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                dataObjectsPagination.style.display = 'none';
+                return;
+            }
+            
+            dataObjectsPagination.innerHTML = '';
+            
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = 'page-item' + (currentPage === 1 ? ' disabled' : '');
+            const prevLink = document.createElement('a');
+            prevLink.className = 'page-link';
+            prevLink.href = '#';
+            prevLink.textContent = 'Previous';
+            prevLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    goToPage(currentPage - 1);
+                }
+            });
+            prevLi.appendChild(prevLink);
+            dataObjectsPagination.appendChild(prevLi);
+            
+            // Logic for showing limited page numbers with ellipsis
+            const maxPagesToShow = 5; // Reduced from 7 to 5
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+            
+            // Adjust if we're near the end
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            // First page + ellipsis if needed
+            if (startPage > 1) {
+                addPageItem(1);
+                
+                if (startPage > 2) {
+                    addEllipsis();
+                }
+            }
+            
+            // Main page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                addPageItem(i);
+            }
+            
+            // Ellipsis + last page if needed
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    addEllipsis();
+                }
+                
+                addPageItem(totalPages);
+            }
+            
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = 'page-item' + (currentPage === totalPages ? ' disabled' : '');
+            const nextLink = document.createElement('a');
+            nextLink.className = 'page-link';
+            nextLink.href = '#';
+            nextLink.textContent = 'Next';
+            nextLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    goToPage(currentPage + 1);
+                }
+            });
+            nextLi.appendChild(nextLink);
+            dataObjectsPagination.appendChild(nextLi);
+            
+            // Helper function to add page item
+            function addPageItem(pageNumber) {
+                const pageLi = document.createElement('li');
+                pageLi.className = 'page-item' + (pageNumber === currentPage ? ' active' : '');
+                const pageLink = document.createElement('a');
+                pageLink.className = 'page-link';
+                pageLink.href = '#';
+                pageLink.textContent = pageNumber;
+                pageLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    goToPage(pageNumber);
+                });
+                pageLi.appendChild(pageLink);
+                dataObjectsPagination.appendChild(pageLi);
+            }
+            
+            // Helper function to add ellipsis
+            function addEllipsis() {
+                const ellipsisLi = document.createElement('li');
+                ellipsisLi.className = 'page-item disabled';
+                const ellipsisSpan = document.createElement('a');
+                ellipsisSpan.className = 'page-link';
+                ellipsisSpan.textContent = '...';
+                ellipsisLi.appendChild(ellipsisSpan);
+                dataObjectsPagination.appendChild(ellipsisLi);
+            }
+        }
+        
+        function goToPage(page) {
+            currentPage = page;
+            const rows = dataObjectsBody.querySelectorAll('tr');
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            
+            // Hide all rows
+            rows.forEach((row, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Re-setup pagination to update active states
+            setupPagination();
+        }
+        
+        // Initialize pagination
+        if (dataObjectsBody) {
+            setupPagination();
+            goToPage(1);
+        }
+    </script>
+{% endblock %}

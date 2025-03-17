@@ -1,0 +1,416 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="css_hero_container">
+        <!-- Theme Toggle -->
+
+        <!-- Hero Section -->
+        <section class="css_hero_main">
+            <div class="css_hero_animated_bg" id="animatedBg"></div>
+            <div class="css_hero_overlay"></div>
+            <div class="css_hero_content">
+                <h1 class="css_hero_title">Revolutionizing Data Storage</h1>
+                <h2 class="css_hero_subtitle">Secure, Scalable, and Fast File Management for the Digital Age</h2>
+                <p>Welcome to the future of file storage and retrieval. Our distributed system offers cutting-edge solutions for managing and accessing your files from anywhere.</p>
+                <div class="css_hero_buttons">
+                    <a href="{% url 'files' %}" class="css_hero_button css_hero_button_primary">
+                        <i class="fas fa-cloud-upload-alt"></i> Start Storing Files
+                    </a>
+                    <a href="{% url 'about' %}" class="css_hero_button css_hero_button_secondary" style="border: 2px solid var(--accent-primary); color: var(--accent-primary);" >
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="css_hero_features " id="features">
+            <h2 class="css_hero_section_title">What We Offer</h2>
+            <div class="css_hero_features_grid">
+                <div class="css_hero_feature_card gradient-top-border">
+                    <div class="css_hero_feature_icon css_hero_float">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="css_hero_feature_title">Distributed Storage</h3>
+                    <p class="css_hero_feature_desc">Your data is broken into smaller chunks and stored across multiple nodes for enhanced security and faster access.</p>
+                </div>
+                <div class="css_hero_feature_card gradient-top-border">
+                    <div class="css_hero_feature_icon css_hero_float">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="css_hero_feature_title">Redundancy & Replication</h3>
+                    <p class="css_hero_feature_desc">Keep your files safe with built-in redundancy and error-checking mechanisms that prevent data loss.</p>
+                </div>
+                <div class="css_hero_feature_card gradient-top-border">
+                    <div class="css_hero_feature_icon css_hero_float">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="css_hero_feature_title">Optimized Retrieval</h3>
+                    <p class="css_hero_feature_desc">Access your data quickly by retrieving it from the nearest or least-loaded node for maximum efficiency.</p>
+                </div>
+                <div class="css_hero_feature_card gradient-top-border">
+                    <div class="css_hero_feature_icon css_hero_float">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="css_hero_feature_title">Django APIs</h3>
+                    <p class="css_hero_feature_desc">A simple yet powerful admin interface for seamless file uploads, retrieval, and management.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="css_hero_how_it_works" id="howItWorks">
+            <h2 class="css_hero_section_title">How It Works</h2>
+            <div class="css_hero_steps">
+                <div class="css_hero_step">
+                    <div class="css_hero_step_number">1</div>
+                    <h3 class="css_hero_step_title">Upload Your Files</h3>
+                    <p class="css_hero_step_desc">Easily upload files via our secure, user-friendly interface with drag-and-drop functionality.</p>
+                </div>
+                <div class="css_hero_step">
+                    <div class="css_hero_step_number">2</div>
+                    <h3 class="css_hero_step_title">Distributed Storage</h3>
+                    <p class="css_hero_step_desc">Your files are split into chunks and distributed across multiple storage nodes.</p>
+                </div>
+                <div class="css_hero_step">
+                    <div class="css_hero_step_number">3</div>
+                    <h3 class="css_hero_step_title">Fast Retrieval</h3>
+                    <p class="css_hero_step_desc">Access your files from the nearest or least-loaded node, ensuring speedy retrieval.</p>
+                </div>
+                <div class="css_hero_step">
+                    <div class="css_hero_step_number">4</div>
+                    <h3 class="css_hero_step_title">Secure Backup</h3>
+                    <p class="css_hero_step_desc">Your files are replicated across multiple nodes, ensuring no data is ever lost.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Supported File Types -->
+        <section class="css_hero_file_types" id="fileTypes">
+            <h2 class="css_hero_section_title">Supported File Types</h2>
+            <div class="css_hero_file_types_grid">
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-pdf"></i>
+                    </div>
+                    <div class="css_hero_file_name">PDF</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-image"></i>
+                    </div>
+                    <div class="css_hero_file_name">Images</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-video"></i>
+                    </div>
+                    <div class="css_hero_file_name">MP4</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-video"></i>
+                    </div>
+                    <div class="css_hero_file_name">MKV</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-archive"></i>
+                    </div>
+                    <div class="css_hero_file_name">ZIP</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-audio"></i>
+                    </div>
+                    <div class="css_hero_file_name">Audio</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-code"></i>
+                    </div>
+                    <div class="css_hero_file_name">Code</div>
+                </div>
+                <div class="css_hero_file_type gradient-top-border">
+                    <div class="css_hero_file_icon">
+                        <i class="far fa-file-alt"></i>
+                    </div>
+                    <div class="css_hero_file_name">Text</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials / Carousel Section -->
+        <section class="css_hero_carousel_section" id="testimonials">
+            <h2 class="css_hero_section_title">What Our Users Say</h2>
+            <div class="css_hero_carousel_container">
+                <div class="css_hero_carousel" id="carousel">
+                    <div class="css_hero_carousel_item">
+                        <div class="css_hero_testimonial">
+                            <p class="css_hero_testimonial_text">"This distributed storage system has transformed how our company manages data. The file chunking and retrieval optimization make accessing our large datasets incredibly fast."</p>
+                            <p class="css_hero_testimonial_author">- Sarah J., Data Scientist</p>
+                        </div>
+                    </div>
+                    <div class="css_hero_carousel_item">
+                        <div class="css_hero_testimonial">
+                            <p class="css_hero_testimonial_text">"I was amazed by the redundancy features. When one of our servers went down, not a single file was lost. The replication system worked flawlessly."</p>
+                            <p class="css_hero_testimonial_author">- Michael T., IT Manager</p>
+                        </div>
+                    </div>
+                    <div class="css_hero_carousel_item">
+                        <div class="css_hero_testimonial">
+                            <p class="css_hero_testimonial_text">"The scalability of this system is incredible. As our needs grew, the storage expanded seamlessly without any performance loss. The Django admin interface makes management a breeze."</p>
+                            <p class="css_hero_testimonial_author">- David L., CTO</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="css_hero_carousel_dots" id="carouselDots">
+                    <div class="css_hero_carousel_dot active"></div>
+                    <div class="css_hero_carousel_dot"></div>
+                    <div class="css_hero_carousel_dot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Features Section -->
+        <section class="css_hero_tech_features" id="techFeatures">
+            <h2 class="css_hero_section_title">Advanced Technical Features</h2>
+            <div class="css_hero_tech_grid">
+                <div class="css_hero_tech_card">
+                    <div class="css_hero_tech_icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="css_hero_tech_content">
+                        <h3>File Chunking</h3>
+                        <p>Large files are automatically broken down into smaller chunks, optimizing storage efficiency and transfer speeds while ensuring data integrity.</p>
+                    </div>
+                </div>
+                <div class="css_hero_tech_card">
+                    <div class="css_hero_tech_icon">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div class="css_hero_tech_content">
+                        <h3>Checksums</h3>
+                        <p>Advanced checksumming algorithms verify data integrity at every stage, ensuring your files remain uncorrupted during storage and transfer.</p>
+                    </div>
+                </div>
+                <div class="css_hero_tech_card">
+                    <div class="css_hero_tech_icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="css_hero_tech_content">
+                        <h3>Secure Server Storage</h3>
+                        <p>Enterprise-grade encryption and security protocols keep your data protected at rest and in transit across all storage nodes.</p>
+                    </div>
+                </div>
+                <div class="css_hero_tech_card">
+                    <div class="css_hero_tech_icon">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <div class="css_hero_tech_content">
+                        <h3>Deduplication</h3>
+                        <p>Smart deduplication technology identifies and eliminates redundant data, maximizing storage efficiency without compromising accessibility.</p>
+                    </div>
+                </div>
+                <div class="css_hero_tech_card">
+                    <div class="css_hero_tech_icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="css_hero_tech_content">
+                        <h3>Load Balancing</h3>
+                        <p>Intelligent distribution algorithms ensure optimal resource utilization across all storage nodes, preventing bottlenecks and maximizing performance.</p>
+                    </div>
+                </div>
+                <div class="css_hero_tech_card">
+                    <div class="css_hero_tech_icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="css_hero_tech_content">
+                        <h3>Version Control</h3>
+                        <p>Keep track of file changes with built-in versioning that allows you to restore previous versions of your files whenever needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="css_hero_cta" id="cta">
+            <div class="css_hero_cta_content">
+                <h2 class="css_hero_cta_title">Get Started Today</h2>
+                <p class="css_hero_cta_desc">Experience the future of file storage and retrieval. Whether you're a business looking for scalable data management or an individual who needs reliable and fast access to their files, our solution has you covered.</p>
+                <div class="css_hero_buttons">
+                    <a href="{% url 'files' %}" class="css_hero_button css_hero_button_primary">
+                        <i class="fas fa-rocket"></i> Start Storing Files Now
+                    </a>
+                    <a href="{% url 'about' %}" class="css_hero_button css_hero_button_secondary">
+                        <i class="fas fa-book"></i> Learn More About Our Technology
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme Toggle Functionality
+
+            // Animated Background
+            function createBgElements() {
+                const bg = document.getElementById('animatedBg');
+                const count = 15;
+                
+                for (let i = 0; i < count; i++) {
+                    const el = document.createElement('div');
+                    el.classList.add('css_hero_animated_bg_item');
+                    
+                    // Random position
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    el.style.left = `${posX}%`;
+                    el.style.top = `${posY}%`;
+                    
+                    // Random size
+                    const size = Math.random() * 100 + 50;
+                    el.style.width = `${size}px`;
+                    el.style.height = `${size}px`;
+                    
+                    // Random animation
+                    const animDuration = Math.random() * 15 + 10;
+                    el.style.animation = `floatIcon ${animDuration}s ease-in-out infinite`;
+                    el.style.animationDelay = `${Math.random() * 5}s`;
+                    
+                    bg.appendChild(el);
+                }
+            }
+            
+            createBgElements();
+            
+            // Carousel Functionality
+            const carousel = document.getElementById('carousel');
+            const dots = document.querySelectorAll('.css_hero_carousel_dot');
+            let currentSlide = 0;
+            const slideCount = document.querySelectorAll('.css_hero_carousel_item').length;
+            
+            function goToSlide(n) {
+                carousel.style.transform = `translateX(${-n * 100}%)`;
+                
+                // Update dots
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === n);
+                });
+                
+                currentSlide = n;
+            }
+            
+            // Add click event to dots
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                });
+            });
+            
+            // Auto-scroll functionality
+            setInterval(() => {
+                let nextSlide = (currentSlide + 1) % slideCount;
+                goToSlide(nextSlide);
+            }, 5000);
+            
+            // Scroll Animation
+            function checkVisibility() {
+                const elements = [
+                    ...document.querySelectorAll('.css_hero_feature_card'),
+                    ...document.querySelectorAll('.css_hero_step'),
+                    ...document.querySelectorAll('.css_hero_file_type'),
+                    ...document.querySelectorAll('.css_hero_tech_card'),
+                    document.querySelector('.css_hero_cta_content')
+                ];
+                
+                elements.forEach(element => {
+                    const position = element.getBoundingClientRect();
+                    
+                    // If element is in viewport
+                    if (position.top < window.innerHeight - 100) {
+                        element.style.animation = 'fadeInUp 0.8s forwards';
+                    }
+                });
+            }
+            
+            // Initial check
+            checkVisibility();
+
+
+                // Particle Background Animation for Hero Section
+    const heroSection = document.querySelector('.css_hero_main');
+    const particleCount = 65;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random position, size and animation delay
+        const size = Math.random() * 5 + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        
+        heroSection.appendChild(particle);
+    }
+    
+    // Add particle style
+    const particleStyle = document.createElement('style');
+    particleStyle.innerHTML = `
+        .particle {
+            position: absolute;
+            background-color: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 15s infinite linear;
+            z-index:100;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-100px) translateX(100px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-200px) translateX(0) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(-100px) translateX(-100px) rotate(270deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+    `;
+    document.head.appendChild(particleStyle);
+ 
+
+
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkVisibility);
+        });
+    </script>
+
+
+
+{% endblock %}

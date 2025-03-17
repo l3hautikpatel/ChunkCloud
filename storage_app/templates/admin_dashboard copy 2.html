@@ -1,0 +1,539 @@
+{% extends "index.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container-fluid cssadminContainer">
+    <!-- Server Status Warning -->
+    {% if server_status_message %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert cssadminAlert alert-dismissible fade show" role="alert">
+                <strong>Warning:</strong> {{ server_status_message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1 class="text-center mb-4 cssadminHeading">Admin Dashboard</h1>
+
+    <!-- Section 1: Information Cards in a single row with green left border -->
+    <div class="cssadminStatsContainer mb-4">
+        <div class="cssadminStatsCard">
+            <div class="cssadminStatContent">
+                <h4>Buckets</h4>
+                <p class="cssadminStatValue">{{ server_info.buckets }}</p>
+            </div>
+        </div>
+        <div class="cssadminStatsCard">
+            <div class="cssadminStatContent">
+                <h4>Objects</h4>
+                <p class="cssadminStatValue">{{ server_info.objects }}</p>
+            </div>
+        </div>
+        <div class="cssadminStatsCard">
+            <div class="cssadminStatContent">
+                <h4>Reported Usage</h4>
+                <p class="cssadminStatValue">{{ server_info.reported_usage }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Servers and Drives Status -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="cssadminStatusBox">
+                <div class="cssadminStatusHeader">
+                    <i class="fas fa-server cssadminIcon"></i>
+                    <h4>Servers</h4>
+                </div>
+                <div class="cssadminStatusContent">
+                    <p>Online: <span class="cssadminStatusOnline">{{ server_info.servers_online }}</span></p>
+                    <p>Offline: <span class="cssadminStatusOffline">{{ server_info.servers_offline }}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="cssadminStatusBox">
+                <div class="cssadminStatusHeader">
+                    <i class="fas fa-hdd cssadminIcon"></i>
+                    <h4>Drives</h4>
+                </div>
+                <div class="cssadminStatusContent">
+                    <p>Online: <span class="cssadminStatusOnline">{{ server_info.drives_online }}</span></p>
+                    <p>Offline: <span class="cssadminStatusOffline">{{ server_info.drives_offline }}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Buckets and Data Objects Tables (20/80 ratio) -->
+    <div class="row mb-4">
+        <!-- Buckets Table (20%) -->
+        <div class="col-md-3">
+            <div class="cssadminTableContainer">
+                <h2 class="cssadminTableHeading">Buckets</h2>
+                <table class="table cssadminTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bucket in buckets %}
+                        <tr>
+                            <td>{{ bucket.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Data Objects Table (80%) -->
+        <div class="col-md-9">
+            <div class="cssadminTableContainer">
+                <h2 class="cssadminTableHeading">Data Objects</h2>
+                <div class="table-responsive">
+                    <table class="table cssadminTable" id="dataObjectsTable">
+                        <thead>
+                            <tr>
+                                <th>Bucket</th>
+                                <th>Object Name</th>
+                                <th>Size</th>
+                                <th>R/W Permission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in data_objects %}
+                            <tr>
+                                <td>{{ obj.bucket }}</td>
+                                <td>{{ obj.object_name }}</td>
+                                <td>{{ obj.size }}</td>
+                                <td>{{ obj.permission }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="dataObjectsPagination" class="cssadminPagination mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Users Table (full width) -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="cssadminTableContainer">
+                <h2 class="cssadminTableHeading">Users</h2>
+                <table class="table cssadminTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Server Statuses and Drive Statuses Tables (50/50 ratio) -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="cssadminTableContainer">
+                <h2 class="cssadminTableHeading">Server Statuses</h2>
+                <table class="table cssadminTable">
+                    <thead>
+                        <tr>
+                            <th>Server URL</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for server in server_statuses %}
+                        <tr>
+                            <td>{{ server.url }}</td>
+                            <td class="{% if server.status == 'Online' %}cssadminStatusOnline{% else %}cssadminStatusOffline{% endif %}">
+                                {{ server.status }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="cssadminTableContainer">
+                <h2 class="cssadminTableHeading">Drive Statuses</h2>
+                <table class="table cssadminTable">
+                    <thead>
+                        <tr>
+                            <th>Server URL</th>
+                            <th>Drive Path</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for server in server_statuses %}
+                            {% for drive in server.drives %}
+                            <tr>
+                                <td>{{ server.url }}</td>
+                                <td>{{ drive.path }}</td>
+                                <td class="{% if drive.status == 'Online' %}cssadminStatusOnline{% else %}cssadminStatusOffline{% endif %}">
+                                    {{ drive.status }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<!-- GSAP for animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+<script>
+    // Animation with GSAP
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate heading
+        gsap.from(".cssadminHeading", {
+            duration: 1,
+            y: -50,
+            opacity: 0,
+            ease: "power3.out"
+        });
+        
+        // Animate stats cards
+        gsap.from(".cssadminStatsCard", {
+            duration: 0.8,
+            x: -30,
+            opacity: 0,
+            stagger: 0.2,
+            ease: "back.out(1.7)"
+        });
+        
+        // Animate status boxes
+        gsap.from(".cssadminStatusBox", {
+            duration: 0.8,
+            scale: 0.9,
+            opacity: 0,
+            stagger: 0.2,
+            delay: 0.4,
+            ease: "power1.out"
+        });
+        
+        // Animate tables
+        gsap.from(".cssadminTableContainer", {
+            duration: 0.8,
+            y: 20,
+            opacity: 0,
+            stagger: 0.15,
+            delay: 0.6,
+            ease: "power2.out"
+        });
+        
+        // Client-side pagination for data objects table
+        const itemsPerPage = 10;
+        const table = document.getElementById('dataObjectsTable');
+        if (table) {
+            const tbody = table.querySelector('tbody');
+            const rows = tbody.querySelectorAll('tr');
+            const totalPages = Math.ceil(rows.length / itemsPerPage);
+            
+            // Create pagination element
+            const paginationContainer = document.getElementById('dataObjectsPagination');
+            if (totalPages > 1) {
+                const paginationHTML = `
+                    <nav aria-label="Data objects navigation">
+                        <ul class="pagination justify-content-center" id="paginationList">
+                            <li class="page-item disabled" id="prevPageBtn">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            ${Array.from({length: totalPages}, (_, i) => 
+                                `<li class="page-item ${i === 0 ? 'active' : ''}">
+                                    <a class="page-link" href="#" data-page="${i + 1}">${i + 1}</a>
+                                </li>`
+                            ).join('')}
+                            <li class="page-item" id="nextPageBtn">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                `;
+                paginationContainer.innerHTML = paginationHTML;
+                
+                // Show only first page initially
+                showPage(1);
+                
+                // Add event listeners to pagination
+                const paginationList = document.getElementById('paginationList');
+                if (paginationList) {
+                    paginationList.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (e.target.tagName === 'A' && e.target.dataset.page) {
+                            const pageNum = parseInt(e.target.dataset.page);
+                            showPage(pageNum);
+                            
+                            // Update active class
+                            const pageItems = paginationList.querySelectorAll('.page-item');
+                            pageItems.forEach(item => {
+                                if (item.querySelector('a') && item.querySelector('a').dataset.page) {
+                                    if (parseInt(item.querySelector('a').dataset.page) === pageNum) {
+                                        item.classList.add('active');
+                                    } else {
+                                        item.classList.remove('active');
+                                    }
+                                }
+                            });
+                            
+                            // Update prev/next buttons
+                            const prevBtn = document.getElementById('prevPageBtn');
+                            const nextBtn = document.getElementById('nextPageBtn');
+                            
+                            if (pageNum === 1) {
+                                prevBtn.classList.add('disabled');
+                            } else {
+                                prevBtn.classList.remove('disabled');
+                            }
+                            
+                            if (pageNum === totalPages) {
+                                nextBtn.classList.add('disabled');
+                            } else {
+                                nextBtn.classList.remove('disabled');
+                            }
+                        } else if (e.target.textContent === 'Previous' && !e.target.parentElement.classList.contains('disabled')) {
+                            const activeItem = paginationList.querySelector('.page-item.active');
+                            const currentPage = parseInt(activeItem.querySelector('a').dataset.page);
+                            if (currentPage > 1) {
+                                showPage(currentPage - 1);
+                                
+                                // Update active class
+                                activeItem.classList.remove('active');
+                                paginationList.querySelector(`a[data-page="${currentPage - 1}"]`).parentElement.classList.add('active');
+                                
+                                // Update prev/next buttons
+                                if (currentPage - 1 === 1) {
+                                    document.getElementById('prevPageBtn').classList.add('disabled');
+                                }
+                                document.getElementById('nextPageBtn').classList.remove('disabled');
+                            }
+                        } else if (e.target.textContent === 'Next' && !e.target.parentElement.classList.contains('disabled')) {
+                            const activeItem = paginationList.querySelector('.page-item.active');
+                            const currentPage = parseInt(activeItem.querySelector('a').dataset.page);
+                            if (currentPage < totalPages) {
+                                showPage(currentPage + 1);
+                                
+                                // Update active class
+                                activeItem.classList.remove('active');
+                                paginationList.querySelector(`a[data-page="${currentPage + 1}"]`).parentElement.classList.add('active');
+                                
+                                // Update prev/next buttons
+                                document.getElementById('prevPageBtn').classList.remove('disabled');
+                                if (currentPage + 1 === totalPages) {
+                                    document.getElementById('nextPageBtn').classList.add('disabled');
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            function showPage(pageNum) {
+                const startIndex = (pageNum - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                
+                // Hide all rows first
+                Array.from(rows).forEach((row, index) => {
+                    if (index >= startIndex && index < endIndex) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+<!-- Custom CSS for Admin Dashboard -->
+<!-- Custom CSS for Admin Dashboard -->
+<style>
+    /* Admin Dashboard Styling */
+    .cssadminContainer {
+        padding: 20px;
+        color: var(--text-primary);
+    }
+    
+    .cssadminHeading {
+        color: var(--accent-primary);
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+    
+    /* Section 1: Info Boxes */
+    .cssadminInfoBox {
+        background-color: var(--background-secondary);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        border-left: 4px solid var(--accent-primary);
+    }
+    
+    .cssadminInfoBox:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .cssadminInfoBox h4 {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .cssadminInfoValue {
+        color: var(--text-primary);
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    /* Section 2: Status Boxes */
+    .cssadminStatusBox {
+        background-color: var(--background-secondary);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    
+    .cssadminStatusHeader {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .cssadminStatusHeader h4 {
+        color: var(--text-primary);
+        margin: 0 0 0 10px;
+    }
+    
+    .cssadminIcon {
+        color: var(--accent-primary);
+        font-size: 1.5rem;
+    }
+    
+    .cssadminStatusContent p {
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+    
+    .cssadminStatusOnline {
+        color: var(--success-color);
+        font-weight: 600;
+    }
+    
+    .cssadminStatusOffline {
+        color: var(--error-color);
+        font-weight: 600;
+    }
+    
+    /* Section 3 & 4 & 5: Tables */
+    .cssadminTableContainer {
+        background-color: var(--background-secondary);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    
+    .cssadminTableHeading {
+        color: var(--text-primary);
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent-primary);
+    }
+    
+    .cssadminTable {
+        color: var(--text-primary);
+    }
+    
+    .cssadminTable thead th {
+        background-color: var(--surface);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+    
+    .cssadminTable tbody td {
+        border-color: var(--border-color);
+    }
+    
+    .cssadminTable tbody tr:hover {
+        background-color: var(--hover-overlay);
+    }
+    
+    /* Pagination */
+    .cssadminPagination .page-link {
+        color: var(--accent-primary);
+        background-color: var(--background-secondary);
+        border-color: var(--border-color);
+    }
+    
+    .cssadminPagination .page-item.active .page-link {
+        background-color: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+    }
+    
+    .cssadminPagination .page-item.disabled .page-link {
+        color: var(--text-secondary);
+        background-color: var(--background-secondary);
+        border-color: var(--border-color);
+    }
+    
+    /* Alert styling */
+    .cssadminAlert {
+        background-color: var(--error-color);
+        color: white;
+        border: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .cssadminInfoValue {
+            font-size: 1.5rem;
+        }
+        
+        .cssadminContainer {
+            padding: 10px;
+        }
+        
+        .cssadminTableContainer {
+            padding: 15px;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+{% endblock %}

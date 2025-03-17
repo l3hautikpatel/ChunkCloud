@@ -1,37 +1,194 @@
 <!-- storage_app/templates/storage_app/base.html -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>ChunkCloud</title>
-    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChunkCloud - Distributed Storage System</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- GSAP Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="{%static 'css/style.css'%}">
+    
 </head>
 <body>
     <header>
-        <h1>ChunkCloud</h1>
-        <nav>
-            <a href="{% url 'index' %}">Home</a>
-
-            <a href="{% url 'files' %}">Files</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}">Profile</a>
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}">Register</a>
-            {% endif %}
-            {% if user.is_authenticated %}
-                <a href="{% url 'admin_dashboard' %}">Admin</a>
-            {% endif %}
-        </nav>
+        <div class="navbar">
+            <a href="{% url 'index' %}" style="text-decoration: none;" >
+            <div class="logo"> 
+                <i class="fas fa-cloud"></i>
+                ChunkCloud
+            </div></a>
+            <nav>
+                <a href="{% url 'index' %}">
+                    <i class="fas fa-home"></i> Home
+                
+                <a href="{% url 'files' %}">
+                    <i class="fas fa-file-upload"></i> Files
+                </a></a>
+                <a href="{% url 'about' %}" class="about">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}">
+                        <i class="fas fa-user-circle"></i> {{ user.username }}
+                    </a>
+                    <a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="{% url 'register' %}">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'admin_dashboard' %}">
+                        <i class="fas fa-tachometer-alt"></i> Admin
+                    </a>
+                {% endif %}
+                
+                <button class="theme-toggle" aria-label="Toggle Theme">
+                    <i class="fas fa-adjust"></i>
+                </button>
+            </nav>
+        </div>
     </header>
+
     <main>
         {% block content %}
         {% endblock %}
     </main>
+
     <footer>
-        <p>&copy; 2025 ChunkCloud</p>
+        <p>&copy; 2025 ChunkCloud - Distributed Storage Solution</p>
     </footer>
+
+    <script>
+       
+            
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme switcher functionality
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            // Check for saved theme preference or use system preference
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Set initial theme
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                updateThemeIcon('light');
+            }
+            
+            // Toggle theme when button is clicked
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Update theme
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Update icon
+                updateThemeIcon(newTheme);
+                
+                // Optional animation effect
+                flashTransition();
+            });
+            
+            // Function to update the theme icon
+            function updateThemeIcon(theme) {
+                const icon = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-sun'; // Show sun in dark mode
+                } else {
+                    icon.className = 'fas fa-moon'; // Show moon in light mode
+                }
+            }
+            
+            // Optional: subtle flash effect during transition
+            function flashTransition() {
+                const flash = document.createElement('div');
+                flash.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(255, 255, 255, 0.1);
+                    pointer-events: none;
+                    z-index: 9999;
+                    opacity: 0;
+                    transition: opacity 0.1s ease;
+                `;
+                document.body.appendChild(flash);
+                
+                setTimeout(() => {
+                    flash.style.opacity = '0.2';
+                    setTimeout(() => {
+                        flash.style.opacity = '0';
+                        setTimeout(() => {
+                            flash.remove();
+                        }, 100);
+                    }, 50);
+                }, 0);
+            }
+            
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                const newTheme = e.matches ? 'dark' : 'light';
+                // Only change if user hasn't manually set a preference
+                if (!localStorage.getItem('theme')) {
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateThemeIcon(newTheme);
+                }
+            });
+
+            // GSAP Animations
+            gsap.from('.navbar', {
+                opacity: 0,
+                y: -50,
+                duration: 0.7,
+                ease: "power2.out"
+            });
+
+            gsap.from('nav a', {
+                x: -20,
+                stagger: 0.1,
+                duration: 0.5, 
+                ease: "power2.out"
+            });
+
+            // GSAP Theme Transition Animation
+            gsap.fromTo(document.body, 
+                { opacity: 0.9 }, 
+                { 
+                    opacity: 1, 
+                    duration: 2,
+                    ease: "power1.inOut"
+                }
+            );
+        });          
+
+
+
+
+        
+    </script>
 </body>
 </html>

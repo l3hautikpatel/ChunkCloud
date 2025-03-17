@@ -1,0 +1,230 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+<div class="files-container">
+    <h2>My Files</h2>
+
+
+    <!-- Download Progress Tracking -->
+    <div id="download-status-container" class="mt-3">
+        <!-- Download statuses will be dynamically added here -->
+    </div>
+
+
+    <!-- Upload Progress Modal -->
+    <div id="upload-progress-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Uploading File</h3>
+            <div class="progress">
+                <div id="upload-progress-bar" class="progress-bar" role="progressbar" style="width: 0%;">
+                    0%
+                </div>
+            </div>
+            <p id="upload-status-message">Preparing upload...</p>
+        </div>
+    </div>
+
+    <!-- Existing upload form -->
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" id="upload-submit-btn">Upload</button>
+    </form>
+
+    <!-- Rest of your existing template -->
+     <!-- Display User Files -->
+    {% if files %}
+    <table>
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Size</th>
+                <th>Uploaded On</th>
+                <th>Last Downloaded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ file.file_name }}</td>
+                <td>{% if file.file_size < 1024 %}
+                    {{ file.file_size }} bytes
+                {% elif file.file_size < 1048576 %}
+                    {% widthratio file.file_size 1024 1 %} KB
+                {% elif file.file_size < 1073741824 %}
+                    {% widthratio file.file_size 1048576 1 %} MB
+                {% elif file.file_size < 1099511627776 %}
+                    {% widthratio file.file_size 1073741824 1 %} GB
+                {% else %}
+                    {% widthratio file.file_size 1099511627776 1 %} TB
+                {% endif %}</td>
+                <td>{{ file.uploaded_at|date:"F j, Y, g:i a" }}</td>
+                <td>
+                    {% if file.last_downloaded_at %}
+                        {{ file.last_downloaded_at|date:"F j, Y, g:i a" }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'download_file' file_id=file.file_id %}" class="btn btn-primary download-btn" 
+                    data-file-id="{{ file.file_id }}"
+                    data-file-name="{{ file.file_name }}" download>Download</a>
+                </td>
+                <td>
+                    <div id="download-status-{{ file.file_id }}" class="download-status"></div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No files to show.</p>
+{% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadForm = document.getElementById('upload-form');
+    const uploadProgressModal = document.getElementById('upload-progress-modal');
+    const uploadProgressBar = document.getElementById('upload-progress-bar');
+    const uploadStatusMessage = document.getElementById('upload-status-message');
+    const uploadSubmitBtn = document.getElementById('upload-submit-btn');
+
+    uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show progress modal
+        uploadProgressModal.style.display = 'block';
+        uploadSubmitBtn.disabled = true;
+        
+        // Prepare form data
+        const formData = new FormData(uploadForm);
+        
+        // AJAX upload
+        const xhr = new XMLHttpRequest();
+        
+        // Track upload progress
+        xhr.upload.onprogress = function(event) {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+                uploadProgressBar.style.width = `${percentComplete}%`;
+                uploadProgressBar.textContent = `${percentComplete}%`;
+                uploadStatusMessage.textContent = `Uploading: ${percentComplete}%`;
+            }
+        };
+        
+        xhr.onload = function() {
+            uploadSubmitBtn.disabled = false;
+            
+            if (xhr.status === 200) {
+                // Success
+                uploadStatusMessage.textContent = 'Upload Complete!';
+                uploadProgressBar.classList.add('bg-success');
+                
+                // Redirect or refresh after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                // Error
+                uploadStatusMessage.textContent = 'Upload Failed. Please try again.';
+                uploadProgressBar.classList.add('bg-danger');
+            }
+        };
+        
+        xhr.onerror = function() {
+            uploadSubmitBtn.disabled = false;
+            uploadStatusMessage.textContent = 'Network Error. Please try again.';
+            uploadProgressBar.classList.add('bg-danger');
+        };
+        
+        // Send request
+        xhr.open('POST', uploadForm.action, true);
+        xhr.send(formData);
+    });
+
+
+    // Download tracking
+    const downloadButtons = document.querySelectorAll('.download-btn');
+    
+    downloadButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const fileId = this.getAttribute('data-file-id');
+            const fileName = this.getAttribute('data-file-name');
+            const downloadStatusEl = document.getElementById(`download-status-${fileId}`);
+            
+            // Disable download button during download
+            this.disabled = true;
+            
+            // Show initial download status
+            downloadStatusEl.innerHTML = `
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="sr-only">Downloading...</span>
+                </div>
+            `;
+            
+            // Fetch download status
+            fetch(`/download/${fileId}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Download failed');
+                    }
+                    
+                    // Trigger file download
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Create a link to download the file
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    
+                    // Update status
+                    downloadStatusEl.innerHTML = `
+                        <span class="text-success">
+                            <i class="fas fa-check-circle"></i> Download Complete
+                        </span>
+                    `;
+                })
+                .catch(error => {
+                    // Handle download error
+                    downloadStatusEl.innerHTML = `
+                        <span class="text-danger">
+                            <i class="fas fa-times-circle"></i> Download Failed
+                        </span>
+                    `;
+                    console.error('Download error:', error);
+                })
+                .finally(() => {
+                    // Re-enable download button
+                    this.disabled = false;
+                });
+        });
+    });
+
+
+});
+</script>
+
+<style>
+    .download-status {
+        font-size: 0.8rem;
+    }
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+    }
+    </style>
+
+{% endblock %}
