@@ -46,14 +46,14 @@
     <div class="row cssadmin-stats-row mb-4 objects-row-2">
         <div class="col-md-6 gradient-top-border">
             <div class="cssadmin-stats-box">
-                <h4><i class="fas fa-server mr-2"></i>  Servers</h4>
+                <h4>Servers</h4>
                 <p>Online: <span class="server-status-icon online"></span><span class="status-online">{{ server_info.servers_online }}</span></p>
                 <p>Offline: <span class="server-status-icon offline"></span><span class="status-offline">{{ server_info.servers_offline }}</span></p>
             </div>
         </div>
         <div class="col-md-6 gradient-top-border">
             <div class="cssadmin-stats-box">
-                <h4><i class="fas fa-hdd mr-2"></i>  Drives</h4>
+                <h4>Drives</h4>
                 <p>Online: <span class="drive-status-icon online"></span><span class="status-online">{{ server_info.drives_online }}</span></p>
                 <p>Offline: <span class="drive-status-icon offline"></span><span class="status-offline">{{ server_info.drives_offline }}</span></p>
             </div>
@@ -198,6 +198,104 @@
     <script>
         // GSAP animations
         document.addEventListener('DOMContentLoaded', function() {
+
+
+
+
+
+
+             // Get all stats boxes
+  const statsBoxes = document.querySelectorAll('.cssadmin-stats-box');
+  
+  // Add icons based on the heading text
+  statsBoxes.forEach(box => {
+    const heading = box.querySelector('h4').innerText.trim();
+    const iconElement = document.createElement('i');
+    iconElement.style.position = 'absolute';
+    iconElement.style.left = '40px';
+    iconElement.style.top = '50%';
+    iconElement.style.transform = 'translateY(-50%)';
+    iconElement.style.fontSize = '304%';
+    iconElement.style.color = 'var(--accent-primary)';
+    
+    // Set different icons based on heading text
+    if (heading === 'Buckets') {
+      iconElement.className = 'fas fa-database';
+    } else if (heading === 'Objects') {
+      iconElement.className = 'fas fa-cubes';
+    } else if (heading === 'Reported Usage') {
+      iconElement.className = 'fas fa-chart-pie';
+    }   else if (heading === 'Servers') {
+        iconElement.className = 'fas fa-server';
+        
+        // Find the servers box
+        const serverBoxes = document.querySelectorAll('.cssadmin-stats-box');
+        let onlineServers = 0;
+        let offlineServers = 0;
+        
+        for (const box of serverBoxes) {
+          if (box.querySelector('h4').textContent === 'Servers') {
+            onlineServers = parseInt(box.querySelector('.status-online').textContent.trim(), 10) || 0;
+            offlineServers = parseInt(box.querySelector('.status-offline').textContent.trim(), 10) || 0;
+            break;
+          }
+        }
+        
+        const totalServers = onlineServers + offlineServers;
+        const onlinePercentage = totalServers > 0 ? (onlineServers / totalServers) * 100 : 0;
+        
+        // Set gradient based on online percentage
+        iconElement.style.background = `linear-gradient(to bottom, 
+                                        #4CAF50 ${onlinePercentage}%, 
+                                        #F44336 ${onlinePercentage}%)`;
+        
+        // For better visibility of the icon itself
+        iconElement.style.webkitBackgroundClip = 'text';
+        iconElement.style.backgroundClip = 'text';
+        iconElement.style.color = 'transparent';
+        
+      } else if (heading === 'Drives') {
+        iconElement.className = 'fas fa-hdd';
+        
+        // Find the drives box
+        const driveBoxes = document.querySelectorAll('.cssadmin-stats-box');
+        let onlineDrives = 0;
+        let offlineDrives = 0;
+        
+        for (const box of driveBoxes) {
+          if (box.querySelector('h4').textContent === 'Drives') {
+            onlineDrives = parseInt(box.querySelector('.status-online').textContent.trim(), 10) || 0;
+            offlineDrives = parseInt(box.querySelector('.status-offline').textContent.trim(), 10) || 0;
+            break;
+          }
+        }
+        
+        const totalDrives = onlineDrives + offlineDrives;
+        const onlinePercentage = totalDrives > 0 ? (onlineDrives / totalDrives) * 100 : 0;
+        
+        // Set gradient based on online percentage
+        iconElement.style.background = `linear-gradient(to bottom, 
+                                        #4CAF50 ${onlinePercentage}%, 
+                                        #F44336 ${onlinePercentage}%)`;
+        
+        // For better visibility of the icon itself
+        iconElement.style.webkitBackgroundClip = 'text';
+        iconElement.style.backgroundClip = 'text';
+        iconElement.style.color = 'transparent';
+      }
+
+
+    // Add the icon and adjust the box
+    box.style.position = 'relative';
+    box.style.paddingLeft = '120px';
+    box.insertBefore(iconElement, box.firstChild);
+  });
+
+
+
+
+
+
 
 
             const closeButtons = document.querySelectorAll('[data-bs-dismiss="alert"]');

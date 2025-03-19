@@ -23,7 +23,7 @@
                 <p>We aim to revolutionize the way businesses and individuals interact with digital storage. Our solution guarantees that your files are not only secure but also easy to access, even under heavy loads. Our focus is to provide an efficient, scalable system that grows with your needs, without compromising performance.</p>
             </div>
             <div class="css_about_vision_image">
-                <img src="{% static 'images/vision-placeholder.svg' %}" alt="Our Vision" class="css_about_image">
+                <img src="{% static 'images/Our Vision - dark.png' %}" alt="Our Vision" class="css_about_image">
             </div>
         </div>
     </div>
@@ -129,49 +129,74 @@
 <script>
     // Team members data (JSON)
     const teamData = [
-        {
-            id: 1,
-            name: "Bhautik Patel",
-            role: "Team Lead & System Architect",
-            img: "{% static 'images/team/placeholder-1.jpg' %}",
-            description: "Designs the overall system architecture and leads the development team with 8+ years of experience in distributed systems."
-        },
-        {
-            id: 2,
-            name: "Tirth Patel",
-            role: "Backend Developer",
-            img: "{% static 'images/team/placeholder-2.jpg' %}",
-            description: "Specialized in Django and database optimizations, Sarah focuses on making our core services reliable and efficient."
-        },
-        {
-            id: 3,
-            name: "Ajay ",
-            role: "Frontend Developer",
-            img: "{% static 'images/team/placeholder-3.jpg' %}",
-            description: "Creates intuitive user interfaces that make complex distributed file operations feel simple and seamless."
-        },
-        {
-            id: 4,
-            name: "Priya Patel",
-            role: "Security Specialist",
-            img: "{% static 'images/team/placeholder-4.jpg' %}",
-            description: "Ensures data integrity and security across our distributed network with robust encryption and access control systems."
-        },
-        {
-            id: 5,
-            name: "Achal",
-            role: "DevOps Engineer",
-            img: "{% static 'images/team/placeholder-5.jpg' %}",
-            description: "Manages our infrastructure, deployment pipelines, and ensures seamless operation across all storage nodes."
-        },
-        {
-            id: 6,
-            name: "Elena Rodriguez",
-            role: "QA & Testing Specialist",
-            img: "{% static 'images/team/placeholder-6.jpg' %}",
-            description: "Maintains our high standards by implementing comprehensive testing strategies across our distributed network."
-        }
-    ];
+    {
+        "id": 1,
+        "name": "Bhautik Patel",
+        "role": "Scrum Master & Backend Developer",
+        "img": "https://brightspace.uwindsor.ca/d2l/common/viewprofileimage.d2l?oi=6606&ui=97390&s=50&lm=638714370265170000&v=11&cui=97390&v=20.25.2.18079",
+        "description": [
+            "Coordinated sprints and task allocation. ",
+            "Developed Django models: FileMetadata, FileChunk, FileVersion. ",
+            "Managed database schema and ORM integration. "
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Tirth Patel",
+        "role": "Backend Developer & API Specialist",
+        "img": "https://brightspace.uwindsor.ca/d2l/common/viewprofileimage.d2l?oi=6606&ui=103145&s=50&lm=638504689948500000&v=11&cui=97390&v=20.25.2.18079",
+        "description": [
+            "Implemented REST APIs for file upload, retrieval, and distribution. ",
+            "Integrated file chunking mechanism with MinIO. ",
+            "Developed replication and error-handling logic. "
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Ajay Charan",
+        "role": "Frontend Developer",
+        "img": "https://brightspace.uwindsor.ca/d2l/common/viewprofileimage.d2l?oi=6606&ui=102543&s=100&lm=638618603776470000&v=11&cui=97390",
+        "description": [
+            "Designed and built frontend templates using Django and Bootstrap. ",
+            "Implemented user interfaces: login, registration, dashboard, and file management. ",
+            "Enhanced the application's UX/UI. "
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Sumandeep Kaur",
+        "role": "DevOps Engineer",
+        "img": "https://brightspace.uwindsor.ca/d2l/common/viewprofileimage.d2l?oi=6606&ui=101249&s=100&lm=638504766871000000&v=11&cui=97390",
+        "description": [
+            "Set up Dockerfile and docker-compose for Django and MinIO. ",
+            "Integrated Prometheus for monitoring. ",
+            "Managed containerization and deployment workflows. "
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Priyam Suratwal",
+        "role": "QA & Testing Lead",
+        "img": "https://brightspace.uwindsor.ca/d2l/common/viewprofileimage.d2l?oi=6606&ui=103437&s=50&lm=638538004855600000&v=11&cui=97390&v=20.25.2.18079",
+        "description": [
+            "Conducted unit, integration, and system testing. ",
+            "Developed test cases for file upload/download and node failover. ",
+            "Performed performance/load testing using Locust. "
+        ]
+    },
+    {
+        "id": 6,
+        "name": "Aanchalben Jariwala",
+        "role": "Documentation & Metrics Analyst",
+        "img": "https://brightspace.uwindsor.ca/d2l/common/viewprofileimage.d2l?oi=6606&ui=98862&s=50&lm=638515798341270000&v=11&cui=97390&v=20.25.2.18079",
+        "description": [
+            "Created project documentation, report, and diagrams (UML, Gantt, sequence, etc.). ",
+            "Integrated Prometheus metrics for system insights. ",
+            "Managed reporting deliverables and performance analysis. "
+        ]
+    }
+];
+
 
     // Function to load team members
     function loadTeamMembers() {
@@ -186,7 +211,7 @@
                 </div>
                 <div class="css_about_team_info">
                     <h3 class="css_about_team_name">${member.name}</h3>
-                    <p class="css_about_team_role">${member.role}</p>
+                    
                     <p class="css_about_team_description">${member.description}</p>
                 </div>
             `;
@@ -196,6 +221,35 @@
 
     // Load team members when DOM is ready
     document.addEventListener('DOMContentLoaded', loadTeamMembers);
+
+
+    function updateVisionImageBasedOnTheme() {
+        const visionImage = document.querySelector('.css_about_image');
+        if (visionImage) {
+            // Get the current theme from localStorage or fallback to system preference
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+            
+            // Update image source based on theme
+            const baseUrl = "{% static 'images/' %}";
+            const imageName = currentTheme === 'dark' ? 'Our Vision - light.png' : 'Our Vision - dark.png';
+            visionImage.src = baseUrl + imageName;
+        }
+    }
+    
+    // Update image on load
+    updateVisionImageBasedOnTheme();
+    
+    // Also listen for storage events to catch theme changes from other pages
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'theme') {
+            updateVisionImageBasedOnTheme();
+        }
+    });
+
+
+
 
     // GSAP Animations
     document.addEventListener('DOMContentLoaded', function() {

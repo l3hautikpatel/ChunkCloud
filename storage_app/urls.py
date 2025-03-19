@@ -1,6 +1,8 @@
 # urls.py
 from django.urls import path , re_path
+from django.conf.urls import include
 from . import views
+from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -50,5 +52,6 @@ urlpatterns = [
 
 
     re_path(r'^.*$', views.custom_404_view, name='custom_404'),
+
 
 ]
