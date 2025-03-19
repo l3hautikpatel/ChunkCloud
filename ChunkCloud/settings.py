@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storage_app',
+    'jet',
+    'jet.dashboard',
 ]
 
 MIDDLEWARE = [
